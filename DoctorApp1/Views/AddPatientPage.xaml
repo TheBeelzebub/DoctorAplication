@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorApp1.AddPatientPage"
+             Title="Add Patient">
+    <StackLayout Padding="20">
+        <Entry Placeholder="First Name" x:Name="FirstNameEntry" />
+        <Entry Placeholder="Last Name" x:Name="LastNameEntry" />
+        <DatePicker x:Name="DateOfBirthPicker" />
+        <Entry Placeholder="Contact Info" x:Name="ContactInfoEntry" />
+        <Entry Placeholder="Address" x:Name="AddressEntry" />
+        <Entry Placeholder="Occupation" x:Name="OccupationEntry" />
+        <Editor Placeholder="General Notes" x:Name="GeneralNotesEntry" />
+        <Button Text="Save" Clicked="OnSaveClicked" />
+    </StackLayout>
+</ContentPage>

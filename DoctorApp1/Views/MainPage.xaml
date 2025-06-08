@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorApp1.MainPage"
+             Title="Search Patients">
+
+    <!-- ToolbarItem for User Dashboard -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Profile"
+                     IconImageSource="user_dashboard_icon.png"
+                     Order="Primary"
+                     Priority="0"
+                     Clicked="OnUserDashboardClicked" />
+    </ContentPage.ToolbarItems>
+
+    <StackLayout Padding="20" Spacing="20">
+        <Label Text="Welcome to the Doctor App" FontSize="24" HorizontalOptions="Center" />
+
+        <!-- Search Bar -->
+        <SearchBar Placeholder="Search patients..." TextChanged="OnSearchTextChanged" />
+
+        <!-- List of Patients -->
+        <ListView ItemsSource="{Binding Patients}" ItemSelected="OnPatientSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding FullName}" 
+                              Detail="{Binding ContactInfo}"
+                              TextColor="{StaticResource PrimaryText}"
+                              DetailColor="{StaticResource PrimaryText}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <!-- Calendar Button -->
+        <Button Text="Open Calendar"
+                Clicked="OnOpenCalendarClicked"
+                Margin="0,10,0,0"/>
+        
+        <!-- Add Patient Button -->
+        <Button Text="Add Patient"
+                Clicked="OnAddPatientClicked"
+                Margin="0,10,0,0"/>
+
+        <!-- Logout Button -->
+        <Button Text="Logout"
+                Clicked="OnLogoutClicked"
+                BackgroundColor="DarkRed"
+                TextColor="White"
+                Margin="0,10,0,10"/>
+
+    </StackLayout>
+</ContentPage>
+

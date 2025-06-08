@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    CalendarPage.xaml
+    Displays a calendar for viewing, adding, editing, and deleting patient appointments.
+    - Users can switch between day and week views.
+    - Appointments are listed for the selected date or week.
+    - Add/Edit/Delete actions are available directly from the page.
+    - Modal overlay is used for appointment creation and editing, with patient and time selection.
+    Note: To avoid XLS0501 ("Content is set more than once"), wrap all content in a single layout container (e.g., Grid).
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorApp1.Views.CalendarPage"
+             Title="Appointments Calendar">
+
+    <!--
+        Use a Grid as the root layout to allow overlaying the modal on top of the main content.
+        This avoids setting the Content property more than once.
+    -->
+    <Grid>
+        <!-- Main calendar content -->
+        <StackLayout Padding="20" Spacing="16">
+            <!-- Page Title -->
+            <Label Text="Appointments Calendar"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- View mode switcher: allows user to toggle between day and week views -->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12">
+                <Button Text="Day" Clicked="OnDayViewClicked"/>
+                <Button Text="Week" Clicked="OnWeekViewClicked"/>
+            </StackLayout>
+
+            <!-- Date picker for selecting the current date -->
+            <DatePicker x:Name="datePicker"
+                        Date="{Binding SelectedDate}"
+                        HorizontalOptions="Center" />
+
+            <!-- Appointment list for the selected date or week -->
+            <CollectionView x:Name="appointmentsList"
+                            ItemsSource="{Binding AppointmentsForSelectedDate}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <!--
+                            Border: Used for each appointment item.
+                            - Displays start time, notes, and patient ID.
+                            - Includes Edit and Delete buttons for each appointment.
+                        -->
+                        <Border Margin="0,8" Padding="12" StrokeShape="RoundRectangle 16"
+                                BackgroundColor="{StaticResource CardBackground}">
+                            <Grid ColumnDefinitions="*,Auto,Auto" VerticalOptions="Center">
+                                <StackLayout>
+                                    <Label Text="{Binding StartTime, StringFormat='{0:HH:mm}'}" FontAttributes="Bold" />
+                                    <Label Text="{Binding Notes}" />
+                                    <Label Text="{Binding PatientID, StringFormat='Patient ID: {0}'}" FontSize="12" TextColor="{StaticResource SecondaryText}" />
+                                </StackLayout>
+                                <Button Grid.Column="1" Text="Edit" Clicked="OnEditAppointmentClicked" CommandParameter="{Binding .}" Padding="8,0"/>
+                                <Button Grid.Column="2" Text="Delete" Clicked="OnDeleteAppointmentClicked" CommandParameter="{Binding .}" Padding="8,0" TextColor="Red"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Button to add a new appointment -->
+            <Button Text="Add Appointment"
+                    Clicked="OnAddAppointmentClicked"
+                    Margin="0,20,0,0"/>
+        </StackLayout>
+
+        <!--
+            Modal overlay for adding/editing appointments.
+            - Includes patient picker, time pickers, and notes editor.
+            - Save and Cancel actions.
+            - IsVisible is controlled from code-behind.
+        -->
+        <ContentView x:Name="AppointmentModal" IsVisible="False" BackgroundColor="#80000000"
+                     Grid.RowSpan="1" Grid.ColumnSpan="1">
+            <Border Padding="20" StrokeShape="RoundRectangle 20"
+                BackgroundColor="{StaticResource CardBackground}"
+                VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="350">
+                <StackLayout Spacing="16">
+                    <Label Text="{Binding ModalTitle}" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Picker x:Name="PatientPicker" Title="Select Patient"/>
+                    <TimePicker x:Name="StartTimePicker" />
+                    <TimePicker x:Name="EndTimePicker" />
+                    <Editor x:Name="NotesEditor" Placeholder="Notes" HeightRequest="60"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="End" Spacing="10">
+                        <Button Text="Cancel" Clicked="OnCancelModal"/>
+                        <Button Text="Save" Clicked="OnSaveModal"/>
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+        </ContentView>
+    </Grid>
+</ContentPage>
+
+

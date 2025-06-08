@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Main color palette -->
+    <Color x:Key="Primary">#4DD0E1</Color>
+    <!-- Cyan -->
+    <Color x:Key="Accent">#08db93</Color>
+    <!-- Green -->
+    <Color x:Key="Background">#ffffff</Color>
+    <!-- White -->
+
+    <!-- Optional: Text and button colors -->
+    <Color x:Key="ButtonText">#ffffff</Color>
+    <Color x:Key="PrimaryText">#000000</Color>
+
+    <!-- Brushes for convenience -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource Accent}"/>
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource Background}"/>
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="{StaticResource ButtonText}"/>
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryText}"/>
+</ResourceDictionary>

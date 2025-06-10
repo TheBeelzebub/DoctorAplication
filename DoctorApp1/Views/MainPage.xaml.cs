@@ -1,21 +1,22 @@
 ﻿using DoctorApp1.Models;
 using DoctorApp1.Services;
-using DoctorApp1.Views; // Added this to resolve the LoginPage namespace issue
+using DoctorApp1.Views;
 using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Maui.Storage;
+using System.Threading.Tasks;
 
 namespace DoctorApp1
 {
     public partial class MainPage : ContentPage
     {
-        public List<Patient> Patients { get; set; } = new List<Patient>(); // Initialize to avoid nullability warnings
-        private string _loggedInEmail = string.Empty; // Initialize to avoid nullability warnings
-        private DoctorUser _currentUser; // Store the logged-in user
+        public List<Patient> Patients { get; set; } = new List<Patient>();
+        private string _loggedInEmail = string.Empty;
+        private DoctorUser _currentUser;
 
-        // 🔹 Constructor for login use
+        // Constructor for login use
         public MainPage(string email)
         {
             InitializeComponent();
@@ -28,7 +29,7 @@ namespace DoctorApp1
             LoadPatients();
         }
 
-        // 🔹 Default constructor
+        // Default constructor
         public MainPage()
         {
             InitializeComponent();
@@ -80,7 +81,7 @@ namespace DoctorApp1
             await Navigation.PushAsync(new CalendarPage());
         }
 
-        // 🔐 Logout functionality
+        // Logout functionality
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
             bool confirm = await DisplayAlert("Logout", "Are you sure you want to log out?", "Yes", "Cancel");
@@ -95,15 +96,14 @@ namespace DoctorApp1
             {
                 if (Application.Current?.Windows.Count > 0)
                 {
-                    Application.Current.Windows[0].Page = new NavigationPage(new LoginPage()); // Resolved namespace issue
+                    Application.Current.Windows[0].Page = new NavigationPage(new LoginPage());
                 }
             });
         }
 
-        // 🔹 Navigate to User Dashboard
+        // Navigate to User Dashboard
         private async void OnUserDashboardClicked(object sender, EventArgs e)
         {
-            // Fix: If _currentUser is null, try to reload from the database using _loggedInEmail
             if (_currentUser == null && !string.IsNullOrEmpty(_loggedInEmail))
             {
                 _currentUser = App.Database.GetUserByEmail(_loggedInEmail);
@@ -118,8 +118,15 @@ namespace DoctorApp1
             }
         }
     }
+
+    public static class ViewExtensions
+    {
+        public static Task WidthRequestTo(this VisualElement view, double width, uint length = 250, Easing easing = null)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            new Animation(v => view.WidthRequest = v, view.WidthRequest, width)
+                .Commit(view, "WidthRequestTo", 16, length, easing ?? Easing.Linear, (v, c) => tcs.SetResult(true));
+            return tcs.Task;
+        }
+    }
 }
-
-
-
-

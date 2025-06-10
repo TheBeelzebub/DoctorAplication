@@ -2,15 +2,97 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.AddPatientPage"
-             Title="Add Patient">
-    <StackLayout Padding="20">
-        <Entry Placeholder="First Name" x:Name="FirstNameEntry" />
-        <Entry Placeholder="Last Name" x:Name="LastNameEntry" />
-        <DatePicker x:Name="DateOfBirthPicker" />
-        <Entry Placeholder="Contact Info" x:Name="ContactInfoEntry" />
-        <Entry Placeholder="Address" x:Name="AddressEntry" />
-        <Entry Placeholder="Occupation" x:Name="OccupationEntry" />
-        <Editor Placeholder="General Notes" x:Name="GeneralNotesEntry" />
-        <Button Text="Save" Clicked="OnSaveClicked" />
-    </StackLayout>
+             BackgroundColor="#FFFFFF">
+
+    <ScrollView>
+        <StackLayout Padding="36,36,36,24" Spacing="28">
+
+            <Label Text="Add Patient"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#222"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,16" />
+
+            <StackLayout Spacing="18" Padding="0">
+
+                <Entry Placeholder="First Name"
+                       x:Name="FirstNameEntry"
+                       FontSize="17"
+                       BackgroundColor="#F7FAFA"
+                       TextColor="#222"
+                       HeightRequest="46"
+                       Margin="0"
+                       PlaceholderColor="#A0A0A0"/>
+
+                <Entry Placeholder="Last Name"
+                       x:Name="LastNameEntry"
+                       FontSize="17"
+                       BackgroundColor="#F7FAFA"
+                       TextColor="#222"
+                       HeightRequest="46"
+                       Margin="0"
+                       PlaceholderColor="#A0A0A0"/>
+
+                <Label Text="Date of Birth"
+                       FontSize="15"
+                       TextColor="#7A7A7A"
+                       Margin="0,12,0,0"/>
+                <DatePicker x:Name="DateOfBirthPicker"
+                            FontSize="17"
+                            BackgroundColor="#F7FAFA"
+                            HeightRequest="46"
+                            TextColor="#222"
+                            Margin="0"
+                            />
+
+                <Entry Placeholder="Contact Info"
+                       x:Name="ContactInfoEntry"
+                       FontSize="17"
+                       BackgroundColor="#F7FAFA"
+                       TextColor="#222"
+                       HeightRequest="46"
+                       Margin="0"
+                       PlaceholderColor="#A0A0A0"/>
+
+                <Entry Placeholder="Address"
+                       x:Name="AddressEntry"
+                       FontSize="17"
+                       BackgroundColor="#F7FAFA"
+                       TextColor="#222"
+                       HeightRequest="46"
+                       Margin="0"
+                       PlaceholderColor="#A0A0A0"/>
+
+                <Entry Placeholder="Occupation"
+                       x:Name="OccupationEntry"
+                       FontSize="17"
+                       BackgroundColor="#F7FAFA"
+                       TextColor="#222"
+                       HeightRequest="46"
+                       Margin="0"
+                       PlaceholderColor="#A0A0A0"/>
+
+                <Editor Placeholder="General Notes"
+                        x:Name="GeneralNotesEntry"
+                        FontSize="17"
+                        BackgroundColor="#F7FAFA"
+                        TextColor="#222"
+                        HeightRequest="100"
+                        Margin="0"
+                        PlaceholderColor="#A0A0A0"/>
+
+                <Button Text="Save"
+                        Clicked="OnSaveClicked"
+                        BackgroundColor="#4DD0E1"
+                        TextColor="White"
+                        CornerRadius="10"
+                        FontSize="17"
+                        HeightRequest="52"
+                        Margin="0,18,0,0"
+                        FontAttributes="Bold"/>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using DoctorApp1.Models;
-using DoctorApp1.Services;
 using Microsoft.Maui.Controls;
 
 namespace DoctorApp1
@@ -62,11 +60,15 @@ namespace DoctorApp1
 
         private void OnEditClicked(object sender, EventArgs e)
         {
-            // No need to create a new instance - we'll bind directly
             IsEditing = true;
-
-            // Force UI refresh
             OnPropertyChanged(nameof(Patient));
+
+            // Scroll to the edit section
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Task.Delay(150); // Allow the UI to update
+                await MainScrollView.ScrollToAsync(EditSection, ScrollToPosition.End, true);
+            });
         }
 
         private async void OnDeleteClicked(object sender, EventArgs e)

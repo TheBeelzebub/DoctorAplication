@@ -2,122 +2,255 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.PatientDetailPage"
-             Title="Patient Details">
-    <ScrollView>
-        <StackLayout Padding="20" Spacing="15">
-           <!-- View Mode -->
-           <StackLayout IsVisible="{Binding IsEditing, Converter={StaticResource InverseBoolConverter}}">
-			   <!-- Patient Information Section -->
-			   <Label Text="Patient Information" FontSize="18" FontAttributes="Bold" />
+             BackgroundColor="#FAFBFF">
 
-			   <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="10">
-				   <Label Text="Name:" Grid.Row="0" Grid.Column="0" FontAttributes="Bold"/>
-				   <Label Text="{Binding Patient.FullName}" Grid.Row="0" Grid.Column="1"/>
+    <ScrollView x:Name="MainScrollView">
+        <Grid WidthRequest="1000" HorizontalOptions="Center">
+            <StackLayout Padding="36,36,36,24" Spacing="24">
 
-				   <Label Text="Age:" Grid.Row="1" Grid.Column="0" FontAttributes="Bold"/>
-				   <Label Text="{Binding Patient.Age}" Grid.Row="1" Grid.Column="1"/>
+                <!-- Patient Information Section with shadow and rounded corners -->
+                <Frame
+                    BackgroundColor="White"
+                    CornerRadius="18"
+                    Padding="0"
+                    Margin="0,0,0,0"
+                    HasShadow="True"
+                    BorderColor="#E0E2EA">
+                    <StackLayout>
+                        <Label Text="Patient Information"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            TextColor="#1A1A1A"
+                            Margin="0,0,0,16"
+                            Padding="20,16,20,0"/>
+                        <Grid
+                            ColumnDefinitions="Auto,*"
+                            RowDefinitions="Auto,1,Auto,1,Auto,1,Auto,1,Auto"
+                            BackgroundColor="Transparent"
+                            Padding="0"
+                            RowSpacing="0">
 
-				   <Label Text="Email:" Grid.Row="2" Grid.Column="0" FontAttributes="Bold"/>
-				   <Label Text="{Binding Patient.ContactInfo}" Grid.Row="2" Grid.Column="1"/>
+                            <Label Text="Name"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="0" Grid.Column="0"/>
+                            <Label Text="{Binding Patient.FullName}"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="0" Grid.Column="1"/>
 
-				   <Label Text="Address:" Grid.Row="3" Grid.Column="0" FontAttributes="Bold"/>
-				   <Label Text="{Binding Patient.Address}" Grid.Row="3" Grid.Column="1"/>
+                            <BoxView Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="1" Color="#F1F2F7"/>
 
-				   <Label Text="Occupation:" Grid.Row="4" Grid.Column="0" FontAttributes="Bold"/>
-				   <Label Text="{Binding Patient.Occupation}" Grid.Row="4" Grid.Column="1"/>
+                            <Label Text="Age"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="2" Grid.Column="0"/>
+                            <Label Text="{Binding Patient.Age}"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="2" Grid.Column="1"/>
 
-				   <Label Text="Notes:" Grid.Row="5" Grid.Column="0" FontAttributes="Bold"/>
-				   <Label Text="{Binding Patient.GeneralNotes}" Grid.Row="5" Grid.Column="1"/>
-			   </Grid>
+                            <BoxView Grid.Row="3" Grid.ColumnSpan="2" HeightRequest="1" Color="#F1F2F7"/>
 
-            <!-- Uploaded Files -->
-            <Label Text="Uploaded Files" FontSize="Large" FontAttributes="Bold" />
-            <Button Text="Upload File" Clicked="OnUploadFileClicked" />
-            <CollectionView ItemsSource="{Binding UploadedFiles}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-							<!-- Display images -->
-							<Image Source="{Binding FilePath}"
-								   HeightRequest="200"
-								   IsVisible="{Binding FileType, Converter={StaticResource IsImageConverter}}" />
-							<!-- Display PDF/other files as labels with icons -->
-							<Label Text="{Binding FilePath}"
-								   IsVisible="{Binding FileType, Converter={StaticResource IsNotImageConverter}}" />
-                            <Label Text="{Binding UploadDate, StringFormat='Uploaded: {0:d}'}" />
+                            <Label Text="Email address"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="4" Grid.Column="0"/>
+                            <Label Text="{Binding Patient.ContactInfo}"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="4" Grid.Column="1"/>
+
+                            <BoxView Grid.Row="5" Grid.ColumnSpan="2" HeightRequest="1" Color="#F1F2F7"/>
+
+                            <Label Text="Occupation"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="6" Grid.Column="0"/>
+                            <Label Text="{Binding Patient.Occupation}"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="6" Grid.Column="1"/>
+
+                            <BoxView Grid.Row="7" Grid.ColumnSpan="2" HeightRequest="1" Color="#F1F2F7"/>
+
+                            <Label Text="Notes"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                Grid.Row="8" Grid.Column="0"/>
+                            <Label Text="{Binding Patient.GeneralNotes}"
+                                FontSize="15"
+                                TextColor="#1A1A1A"
+                                Padding="20,12"
+                                LineBreakMode="TailTruncation"
+                                MaxLines="2"
+                                Grid.Row="8" Grid.Column="1"/>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- The rest of your content below remains unchanged -->
+
+                <StackLayout>
+                    <Label Text="Uploaded Files"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="#1A1A1A"
+                       Margin="0,0,0,8"/>
+                    <ScrollView Orientation="Horizontal" HeightRequest="120">
+                        <StackLayout Orientation="Horizontal" Spacing="16">
+                            <CollectionView ItemsSource="{Binding UploadedFiles}"
+                                        ItemsLayout="HorizontalList"
+                                        HeightRequest="100"
+                                        VerticalOptions="Start">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Image Source="{Binding FilePath}"
+                                               HeightRequest="100"
+                                               Aspect="AspectFit"
+                                               IsVisible="{Binding FileType, Converter={StaticResource IsImageConverter}}"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Center"
+                                               Margin="0"/>
+                                            <StackLayout IsVisible="{Binding FileType, Converter={StaticResource IsNotImageConverter}}"
+                                                     HeightRequest="100"
+                                                     WidthRequest="80"
+                                                     BackgroundColor="#F6F7FB"
+                                                     VerticalOptions="Center"
+                                                     HorizontalOptions="Center"
+                                                     Padding="12,12,12,0">
+                                                <Label Text="{Binding FileName}" FontSize="12" TextColor="#1A1A1A"/>
+                                            </StackLayout>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                                <Button Text="Upload File"
+                                    Clicked="OnUploadFileClicked"
+                                    WidthRequest="80"
+                                    HeightRequest="100"
+                                    BackgroundColor="#F6F7FB"
+                                    ImageSource="upload_icon.png"
+                                    CornerRadius="8"/>
+                            </StackLayout>
                         </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    </ScrollView>
+                </StackLayout>
 
-            <!-- Medical History -->
-            <Label Text="Medical History" FontSize="Large" FontAttributes="Bold" />
-            <CollectionView ItemsSource="{Binding MedicalHistory}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-                            <Label Text="{Binding Diagnosis}" FontAttributes="Bold" />
-                            <Label Text="{Binding Treatment}" />
-                            <Label Text="{Binding Notes}" />
-                            <Label Text="{Binding DateRecorded, StringFormat='Date Recorded: {0:d}'}" />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <StackLayout>
+                    <Label Text="Medical History"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="#1A1A1A"
+                       Margin="0,16,0,4"/>
+                    <CollectionView ItemsSource="{Binding MedicalHistory}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="12" Margin="0,0,0,12" BackgroundColor="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Text="{Binding Diagnosis}" FontAttributes="Bold" FontSize="15" TextColor="#1A1A1A" Grid.Row="0"/>
+                                    <Label Text="{Binding Treatment}" FontSize="14" TextColor="#666" Grid.Row="1"/>
+                                    <Label Text="{Binding Notes}" FontSize="13" TextColor="#999" Grid.Row="2"/>
+                                    <Label Text="{Binding DateRecorded, StringFormat='Date Recorded: {0:d}'}" FontSize="13" TextColor="#999" Grid.Row="3"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
 
-            <!-- Prescribed Medicines -->
-            <Label Text="Prescribed Medicines" FontSize="Large" FontAttributes="Bold" />
-            <CollectionView ItemsSource="{Binding Medicines}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-                            <Label Text="{Binding MedicineName}" FontAttributes="Bold" />
-                            <Label Text="{Binding Dosage}" />
-                            <Label Text="{Binding PrescriptionDate, StringFormat='Prescription Date: {0:d}'}" />
-                            <Label Text="{Binding Notes}" />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <StackLayout>
+                    <Label Text="Prescribed Medicines"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="#1A1A1A"
+                       Margin="0,16,0,4"/>
+                    <CollectionView ItemsSource="{Binding Medicines}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="12" Margin="0,0,0,12" BackgroundColor="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Text="{Binding MedicineName}" FontAttributes="Bold" FontSize="15" TextColor="#1A1A1A" Grid.Row="0"/>
+                                    <Label Text="{Binding Dosage}" FontSize="14" TextColor="#666" Grid.Row="1"/>
+                                    <Label Text="{Binding PrescriptionDate, StringFormat='Prescription Date: {0:d}'}" FontSize="13" TextColor="#999" Grid.Row="2"/>
+                                    <Label Text="{Binding Notes}" FontSize="13" TextColor="#999" Grid.Row="3"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
 
-            <!-- Edit Button -->
-			   <Button Text="Edit Patient"
-                Clicked="OnEditClicked"
-                HorizontalOptions="FillAndExpand"/>
+                <StackLayout Orientation="Horizontal" Spacing="12" Margin="0,0,0,0" HorizontalOptions="Start">
+                    <Button Text="Edit Patient"
+                        Clicked="OnEditClicked"
+                        BackgroundColor="White"
+                        TextColor="#1A1A1A"
+                        BorderColor="#E0E2EA"
+                        CornerRadius="6"
+                        HeightRequest="44"
+                        WidthRequest="120"/>
+                    <Button Text="Delete Patient"
+                        Clicked="OnDeleteClicked"
+                        BackgroundColor="#FF5252"
+                        TextColor="White"
+                        CornerRadius="6"
+                        HeightRequest="44"
+                        WidthRequest="140"/>
+                </StackLayout>
 
-			<!-- Delete Button -->
-			   <Button Text="Delete Patient"
-                Clicked="OnDeleteClicked"
-                HorizontalOptions="FillAndExpand"
-                BackgroundColor="#FF5252"
-                TextColor="White"/>
-           </StackLayout>
-
-			<!-- Edit Mode (Only visible when editing) -->
-			<StackLayout IsVisible="{Binding IsEditing}" Spacing="10">
-				<Label Text="Edit Patient" FontSize="18" FontAttributes="Bold"/>
-
-				<!-- Editable Fields -->
-				<Label Text="New Values:" FontAttributes="Bold" Margin="0,10,0,0"/>
-				<Entry Text="{Binding Patient.FirstName}" Placeholder="First Name"/>
-				<Entry Text="{Binding Patient.LastName}" Placeholder="Last Name"/>
-				<DatePicker Date="{Binding Patient.DateOfBirth}"/>
-				<Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email"/>
-				<Entry Text="{Binding Patient.Address}" Placeholder="Address"/>
-				<Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation"/>
-				<Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100"/>
-
-				<StackLayout Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
-					<Button Text="Save"
-							Clicked="OnSaveClicked"
-							HorizontalOptions="FillAndExpand"
-							BackgroundColor="#4CAF50"
-							TextColor="White"/>
-					<Button Text="Cancel"
-							Clicked="OnCancelClicked"
-							HorizontalOptions="FillAndExpand"/>
-				</StackLayout>
-			</StackLayout>
-        </StackLayout>
+                <StackLayout x:Name="EditSection" IsVisible="{Binding IsEditing}" Spacing="12" Margin="0,32,0,0">
+                    <Label Text="Edit Patient" FontSize="18" FontAttributes="Bold"/>
+                    <Entry Text="{Binding Patient.FirstName}" Placeholder="First Name"/>
+                    <Entry Text="{Binding Patient.LastName}" Placeholder="Last Name"/>
+                    <DatePicker Date="{Binding Patient.DateOfBirth}"/>
+                    <Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email address"/>
+                    <Entry Text="{Binding Patient.Address}" Placeholder="Address"/>
+                    <Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation"/>
+                    <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100"/>
+                    <StackLayout Orientation="Horizontal" Spacing="10">
+                        <Button Text="Save"
+                            Clicked="OnSaveClicked"
+                            BackgroundColor="#4CAF50"
+                            TextColor="White"
+                            CornerRadius="6"
+                            HeightRequest="44"
+                            WidthRequest="120"/>
+                        <Button Text="Cancel"
+                            Clicked="OnCancelClicked"
+                            BackgroundColor="White"
+                            TextColor="#1A1A1A"
+                            BorderColor="#E0E2EA"
+                            CornerRadius="6"
+                            HeightRequest="44"
+                            WidthRequest="120"/>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+        </Grid>
     </ScrollView>
 </ContentPage>

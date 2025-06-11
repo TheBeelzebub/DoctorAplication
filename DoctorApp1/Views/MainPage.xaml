@@ -7,7 +7,25 @@
     <Grid Padding="28" BackgroundColor="White" Margin="0"
           VerticalOptions="Start" HorizontalOptions="Center"
           RowDefinitions="Auto,Auto,Auto,Auto,*"
-          ColumnDefinitions="*,Auto">
+          ColumnDefinitions="*,Auto,Auto">
+
+        <!-- User Dashboard button (left of logout) -->
+        <Button 
+            x:Name="UserButton"
+            Text="User"
+            WidthRequest="100"
+            HeightRequest="36"
+            FontSize="16"
+            BackgroundColor="#FAFBFF"
+            TextColor="#1A1A1A"
+            CornerRadius="6"
+            BorderColor="#D0D0D0"
+            BorderWidth="1"
+            VerticalOptions="Start"
+            HorizontalOptions="End"
+            Margin="0,10,4,8"
+            Clicked="OnUserDashboardClicked"
+            Grid.Row="0" Grid.Column="1"/>
 
         <!-- Logout button top right -->
         <Button 
@@ -25,7 +43,7 @@
             HorizontalOptions="End"
             Margin="0,10,10,8"
             Clicked="OnLogoutClicked"
-            Grid.Row="0" Grid.Column="1"/>
+            Grid.Row="0" Grid.Column="2"/>
 
         <!-- Welcome header -->
         <Label
@@ -36,11 +54,11 @@
             TextColor="#1A1A1A"
             Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
             Margin="0,24,0,0"/>
 
         <!-- Search and buttons row with padding -->
-        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Padding="50,0,50,0" Margin="0,32,0,0"
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Padding="50,0,50,0" Margin="0,32,0,0"
               ColumnDefinitions="0.55*,Auto,Auto"
               WidthRequest="1000">
 
@@ -86,7 +104,7 @@
         </Grid>
 
         <!-- Headers for patient list -->
-        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
               ColumnDefinitions="*,Auto"
               WidthRequest="900">
 
@@ -111,7 +129,7 @@
         </Grid>
 
         <!-- Patients list -->
-        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
               ColumnDefinitions="*,Auto"
               WidthRequest="1000">
             <ListView

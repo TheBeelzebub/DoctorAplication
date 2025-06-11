@@ -1,56 +1,66 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.MainPage"
-             BackgroundColor="#FAFBFF"
+             BackgroundColor="White"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid Padding="28" BackgroundColor="White" Margin="32,0,32,32"
-          VerticalOptions="Center" HorizontalOptions="Center"
+    <Grid Padding="28" BackgroundColor="White" Margin="0"
+          VerticalOptions="Start" HorizontalOptions="Center"
           RowDefinitions="Auto,Auto,Auto,Auto,*"
           ColumnDefinitions="*,Auto">
 
+        <!-- Logout button top right -->
         <Button 
             x:Name="LogoutButton"
             Text="Log out"
-            WidthRequest="80"
+            WidthRequest="100"
             HeightRequest="36"
-            FontSize="14"
-            BackgroundColor="#F6F7FB"
-            TextColor="Black"
+            FontSize="16"
+            BackgroundColor="#FAFBFF"
+            TextColor="#1A1A1A"
+            CornerRadius="6"
+            BorderColor="#D0D0D0"
+            BorderWidth="1"
             VerticalOptions="Start"
             HorizontalOptions="End"
-            Margin="0,0,0,8"
+            Margin="0,10,10,8"
             Clicked="OnLogoutClicked"
             Grid.Row="0" Grid.Column="1"/>
 
+        <!-- Welcome header -->
         <Label
             Text="Welcome to the Doctor App"
             FontAttributes="Bold"
-            FontSize="32"
+            FontSize="54"
+            HorizontalTextAlignment="Center"
             TextColor="#1A1A1A"
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,24,0,0"/>
 
-        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+        <!-- Search and buttons row with padding -->
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Padding="50,0,50,0" Margin="0,32,0,0"
               ColumnDefinitions="0.55*,Auto,Auto"
-              Margin="0,32,0,0">
+              WidthRequest="1000">
+
             <Entry
                 x:Name="SearchEntry"
                 Placeholder="Search patients"
                 FontSize="16"
                 HeightRequest="32"
                 BackgroundColor="#F6F7FB"
+                PlaceholderColor="#4DD0E1"
                 Margin="0,0,12,0"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="Center"
                 TextChanged="OnSearchTextChanged"
                 Grid.Column="0"/>
+
             <Button
                 x:Name="AddPatientButton"
                 Text="Add Patient"
-                BackgroundColor="#407BFF"
+                BackgroundColor="#4DD0E1"
                 TextColor="White"
                 FontSize="16"
                 CornerRadius="6"
@@ -60,10 +70,11 @@
                 Clicked="OnAddPatientClicked"
                 Grid.Column="1"
                 Margin="0,0,8,0"/>
+
             <Button
                 x:Name="CalendarButton"
                 Text="Open Calendar"
-                BackgroundColor="#407BFF"
+                BackgroundColor="#4DD0E1"
                 TextColor="White"
                 FontSize="16"
                 CornerRadius="6"
@@ -74,64 +85,83 @@
                 Grid.Column="2"/>
         </Grid>
 
+        <!-- Headers for patient list -->
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
               ColumnDefinitions="*,Auto"
-              Margin="0,36,0,0">
+              WidthRequest="900">
+
             <Label
                 Text="Patients"
-                FontSize="16"
+                FontSize="20"
                 FontAttributes="Bold"
                 TextColor="#1A1A1A"
                 VerticalOptions="Center"
                 Padding="12,0"/>
+
             <Label
                 Text="Contact info"
-                FontSize="16"
+                FontSize="20"
                 FontAttributes="Bold"
                 TextColor="#1A1A1A"
                 VerticalOptions="Center"
                 HorizontalOptions="End"
-                Padding="12,0"
+                Padding="0,0,6,0"
+                Margin="-6,0,0,0"
                 Grid.Column="1"/>
         </Grid>
 
-        <ListView
-            x:Name="PatientsList"
-            Grid.Row="4"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,8,0,0"
-            ItemsSource="{Binding Patients}"
-            HeightRequest="260"
-            SeparatorVisibility="None"
-            HasUnevenRows="True"
-            ItemSelected="OnPatientSelected"
-            BackgroundColor="Transparent">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid HeightRequest="44"
-                              ColumnDefinitions="*,Auto"
-                              Margin="0,0,0,8"
-                              BackgroundColor="#F6F7FB"
-                              Padding="0"
-                              VerticalOptions="Center">
-                            <Label Text="{Binding FullName}" 
-                                   FontSize="16"
-                                   TextColor="#1A1A1A"
-                                   VerticalOptions="Center"
-                                   Padding="12,0"/>
-                            <Label Text="{Binding ContactInfo}"
-                                   FontSize="16"
-                                   TextColor="#1A1A1A"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="End"
-                                   Padding="12,0"
-                                   Grid.Column="1"/>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <!-- Patients list -->
+        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+              ColumnDefinitions="*,Auto"
+              WidthRequest="1000">
+            <ListView
+                x:Name="PatientsList"
+                Grid.Row="4"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="50,8,50,0"
+                ItemsSource="{Binding Patients}"
+                HeightRequest="260"
+                SeparatorVisibility="None"
+                HasUnevenRows="True"
+                ItemSelected="OnPatientSelected"
+                BackgroundColor="Transparent">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Border
+                                Margin="0,0,0,8"
+                                Padding="0"
+                                Stroke="#D0D0D0"
+                                StrokeThickness="1"
+                                BackgroundColor="#FAFBFF"
+                                HeightRequest="44"
+                                VerticalOptions="Center"
+                                StrokeShape="RoundRectangle 6">
+                                <Grid
+                                    ColumnDefinitions="*,Auto"
+                                    Padding="12,0"
+                                    VerticalOptions="Center">
+
+                                    <Label Text="{Binding FullName}" 
+                                           FontSize="16"
+                                           TextColor="#1A1A1A"
+                                           VerticalOptions="Center" />
+
+                                    <Label Text="{Binding ContactInfo}"
+                                           FontSize="16"
+                                           TextColor="#1A1A1A"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="End"
+                                           Margin="-6,0,0,0"
+                                           Grid.Column="1" />
+                                </Grid>
+                            </Border>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
     </Grid>
 </ContentPage>

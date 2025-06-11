@@ -9,7 +9,7 @@
             <Label Text="User Dashboard"
                    FontSize="28"
                    FontAttributes="Bold"
-                   TextColor="#1976D2"
+                   TextColor="#4DD0E1"
                    HorizontalOptions="Center"
                    Margin="0,0,0,12"/>
 

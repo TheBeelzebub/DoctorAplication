@@ -70,8 +70,8 @@
                             <Label Text="Forgot password?"
                                FontSize="15"
                                TextColor="#1976D2"
-                               TextDecorations="Underline"
                                HorizontalOptions="End"
+                               Cursor="Hand"
                                Margin="0,0,4,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnForgotPasswordTapped"/>
@@ -100,7 +100,6 @@
                     <Label Text="Create an Account"
                            FontSize="15"
                            TextColor="#1976D2"
-                           TextDecorations="Underline"
                            HorizontalOptions="Center">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnRegisterClicked"/>

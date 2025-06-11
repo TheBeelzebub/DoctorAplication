@@ -44,10 +44,10 @@ namespace DoctorApp1.Views
                 return;
             }
 
-            if (RememberMeCheckBox.IsChecked)
+            /*if (RememberMeCheckBox.IsChecked)
             {
                 Preferences.Set("LoggedInEmail", email);
-            }
+            }*/
 
             // Successful login
             await Navigation.PushAsync(new MainPage(email.Trim().ToLower()));

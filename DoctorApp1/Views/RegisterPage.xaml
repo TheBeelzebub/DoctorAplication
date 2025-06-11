@@ -2,24 +2,108 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.Views.RegisterPage"
-             Title="Register">
+             Padding="0"
+             BackgroundColor="#F2F5F8"
+             NavigationPage.HasNavigationBar="False">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20">
+    <Grid>
+        <ScrollView>
+            <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
+                <!-- Header -->
+                <StackLayout Margin="0,12,0,22" HorizontalOptions="Center" Spacing="10">
+                    <Image Source="logo.png" HeightRequest="54" WidthRequest="54" Margin="0,0,0,6"/>
+                    <Label Text="Med Helper"
+                           FontSize="32"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0"/>
+                </StackLayout>
 
-            <Label Text="Register a New Account" FontSize="24" HorizontalOptions="Center" />
-
-            <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email" />
-            <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" />
-            <Entry x:Name="ConfirmPasswordEntry" Placeholder="Confirm Password" IsPassword="True" />
-
-            <Button Text="Register" Clicked="OnRegisterClicked" />
-
-            <Button Text="Back to Login"
-                    Clicked="OnBackToLoginClicked"
+                <!-- Register card -->
+                <Border
+                    StrokeShape="RoundRectangle 12"
+                    StrokeThickness="0"
+                    BackgroundColor="White"
                     HorizontalOptions="Center"
-                    Margin="0,10"/>
+                    VerticalOptions="Start"
+                    WidthRequest="450"
+                    HeightRequest="380"
+                    Padding="32,0">
 
-        </VerticalStackLayout>
-    </ScrollView>
+                    <Grid HorizontalOptions="FillAndExpand"
+                        VerticalOptions="FillAndExpand"
+                        BackgroundColor="White"
+                        Padding="0"
+                        Margin="0"
+                        StyleClass="RegisterCard">
+
+                        <StackLayout Spacing="20" VerticalOptions="FillAndExpand">
+                            <Label Text="Register"
+                               FontSize="34"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               Margin="0,14,0,6"/>
+                            <Entry x:Name="EmailEntry"
+                               Placeholder="Email"
+                               Keyboard="Email"
+                               FontSize="17"
+                               BackgroundColor="#F7FAFA"
+                               TextColor="#222"
+                               HeightRequest="46"
+                               Margin="0"
+                               PlaceholderColor="#A0A0A0"/>
+                            <Entry x:Name="PasswordEntry"
+                               Placeholder="Password"
+                               IsPassword="True"
+                               FontSize="17"
+                               BackgroundColor="#F7FAFA"
+                               TextColor="#222"
+                               HeightRequest="46"
+                               Margin="0"
+                               PlaceholderColor="#A0A0A0"/>
+                            <Entry x:Name="ConfirmPasswordEntry"
+                               Placeholder="Confirm Password"
+                               IsPassword="True"
+                               FontSize="17"
+                               BackgroundColor="#F7FAFA"
+                               TextColor="#222"
+                               HeightRequest="46"
+                               Margin="0"
+                               PlaceholderColor="#A0A0A0"/>
+
+                            <Button Text="Register"
+                                Clicked="OnRegisterClicked"
+                                BackgroundColor="#4DD0E1"
+                                TextColor="White"
+                                CornerRadius="8"
+                                FontAttributes="Bold"
+                                FontSize="17"
+                                HeightRequest="46"
+                                Margin="0,2,0,0"/>
+                        </StackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Already have an account? link -->
+                <StackLayout Spacing="0" Margin="0,10,0,0" HorizontalOptions="Center">
+                    <Label Text="Already have an account?"
+                           FontSize="15"
+                           TextColor="#222"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Back to Login"
+                           FontSize="15"
+                           TextColor="#1976D2"
+                           TextDecorations="Underline"
+                           HorizontalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackToLoginClicked"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

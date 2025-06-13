@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.PatientDetailPage"
-             BackgroundColor="#FAFBFF">
+             BackgroundColor="#f3f4fb"
+             NavigationPage.HasNavigationBar="False">
 
     <ScrollView x:Name="MainScrollView">
-        <Grid WidthRequest="1000" HorizontalOptions="Center">
+        <Grid WidthRequest="820
+              " HorizontalOptions="Center">
             <StackLayout Padding="36,36,36,24" Spacing="24">
 
                 <!-- Patient Information Section with shadow and rounded corners -->
@@ -103,9 +105,7 @@
                     </StackLayout>
                 </Frame>
 
-                <!-- The rest of your content below remains unchanged -->
-
-                <StackLayout>
+                <!--<StackLayout>
                     <Label Text="Uploaded Files"
                        FontSize="18"
                        FontAttributes="Bold"
@@ -151,7 +151,7 @@
                             </StackLayout>
                         </StackLayout>
                     </ScrollView>
-                </StackLayout>
+                </StackLayout>-->
 
                 <StackLayout>
                     <Label Text="Medical History"
@@ -188,7 +188,7 @@
                     <CollectionView ItemsSource="{Binding Medicines}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="12" Margin="0,0,0,12" BackgroundColor="White">
+                                <Grid Margin="0,0,0,12" BackgroundColor="White">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
@@ -210,10 +210,11 @@
                         Clicked="OnEditClicked"
                         BackgroundColor="White"
                         TextColor="#1A1A1A"
-                        BorderColor="#E0E2EA"
+                        BorderColor="#D0D0D0"
                         CornerRadius="6"
                         HeightRequest="44"
-                        WidthRequest="120"/>
+                        WidthRequest="120"
+                        BorderWidth="1"/>
                     <Button Text="Delete Patient"
                         Clicked="OnDeleteClicked"
                         BackgroundColor="#FF5252"
@@ -225,17 +226,17 @@
 
                 <StackLayout x:Name="EditSection" IsVisible="{Binding IsEditing}" Spacing="12" Margin="0,32,0,0">
                     <Label Text="Edit Patient" FontSize="18" FontAttributes="Bold"/>
-                    <Entry Text="{Binding Patient.FirstName}" Placeholder="First Name"/>
-                    <Entry Text="{Binding Patient.LastName}" Placeholder="Last Name"/>
-                    <DatePicker Date="{Binding Patient.DateOfBirth}"/>
-                    <Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email address"/>
-                    <Entry Text="{Binding Patient.Address}" Placeholder="Address"/>
-                    <Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation"/>
-                    <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100"/>
+                    <Entry Text="{Binding Patient.FirstName}" Placeholder="First Name" BackgroundColor="#FFFFFF"/>
+                    <Entry Text="{Binding Patient.LastName}" Placeholder="Last Name" BackgroundColor="#FFFFFF"/>
+                    <DatePicker Date="{Binding Patient.DateOfBirth}" BackgroundColor="#FFFFFF"/>
+                    <Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email address" BackgroundColor="#FFFFFF"/>
+                    <Entry Text="{Binding Patient.Address}" Placeholder="Address" BackgroundColor="#FFFFFF"/>
+                    <Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation" BackgroundColor="#FFFFFF"/>
+                    <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100" BackgroundColor="#FFFFFF"/>
                     <StackLayout Orientation="Horizontal" Spacing="10">
                         <Button Text="Save"
                             Clicked="OnSaveClicked"
-                            BackgroundColor="#4CAF50"
+                            BackgroundColor="#4DD0E1"
                             TextColor="White"
                             CornerRadius="6"
                             HeightRequest="44"
@@ -244,10 +245,11 @@
                             Clicked="OnCancelClicked"
                             BackgroundColor="White"
                             TextColor="#1A1A1A"
-                            BorderColor="#E0E2EA"
+                            BorderColor="#D0D0D0"
                             CornerRadius="6"
                             HeightRequest="44"
-                            WidthRequest="120"/>
+                            WidthRequest="120"
+                            BorderWidth="1"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

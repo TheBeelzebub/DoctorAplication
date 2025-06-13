@@ -2,20 +2,20 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.Views.UserDashboardPage"
-             BackgroundColor="#FAFBFF">
+             Padding="0"
+             BackgroundColor="#f3f4fb"
+             NavigationPage.HasNavigationBar="False">
 
     <ScrollView>
-        <StackLayout Padding="36,36,36,24" Spacing="24" HorizontalOptions="Center" WidthRequest="640">
-            <Label Text="User Dashboard"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   TextColor="#4DD0E1"
-                   HorizontalOptions="Center"
-                   Margin="0,0,0,12"/>
-
+        <StackLayout 
+        Padding="36,0,36,36"
+        WidthRequest="600"
+        Spacing="24"
+        HorizontalOptions="Center"
+        VerticalOptions="Start">
             <Frame BackgroundColor="White"
                    CornerRadius="18"
-                   Padding="0"
+                   Padding="0,25,0,0"
                    Margin="0"
                    HasShadow="True"
                    BorderColor="#E0E2EA"
@@ -44,7 +44,7 @@
                                Placeholder="Current Password"
                                IsPassword="True"
                                FontSize="17"
-                               BackgroundColor="#F7FAFA"
+                               BackgroundColor="#FFFFFF"
                                TextColor="#222"
                                HeightRequest="40"
                                WidthRequest="260"
@@ -64,7 +64,7 @@
                                Placeholder="New Password"
                                IsPassword="True"
                                FontSize="17"
-                               BackgroundColor="#F7FAFA"
+                               BackgroundColor="#FFFFFF"
                                TextColor="#222"
                                HeightRequest="40"
                                WidthRequest="260"
@@ -84,7 +84,7 @@
                                Placeholder="Confirm New Password"
                                IsPassword="True"
                                FontSize="17"
-                               BackgroundColor="#F7FAFA"
+                               BackgroundColor="#FFFFFF"
                                TextColor="#222"
                                HeightRequest="40"
                                WidthRequest="260"
@@ -96,7 +96,7 @@
                     <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="Center">
                         <Button Text="Change Password"
                                 Clicked="OnChangePasswordClicked"
-                                BackgroundColor="#4CAF50"
+                                BackgroundColor="#4DD0E1"
                                 TextColor="White"
                                 CornerRadius="6"
                                 HeightRequest="44"

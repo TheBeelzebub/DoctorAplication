@@ -12,7 +12,7 @@ namespace DoctorApp1
 {
     public partial class MainPage : ContentPage
     {
-        public List<Patient> Patients { get; set; } = new List<Patient>();
+        public List<Models.Patient> Patients { get; set; } = new List<Models.Patient>();
         private string _loggedInEmail = string.Empty;
         private DoctorUser _currentUser;
 
@@ -64,7 +64,7 @@ namespace DoctorApp1
 
         private async void OnPatientSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (e.SelectedItem is Patient selectedPatient)
+            if (e.SelectedItem is Models.Patient selectedPatient)
             {
                 await Navigation.PushAsync(new PatientDetailPage(selectedPatient.PatientID));
                 ((ListView)sender).SelectedItem = null;

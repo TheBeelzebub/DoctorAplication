@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.Views.LoginPage"
              Padding="0"
-             BackgroundColor="#F2F5F8"
+             BackgroundColor="#f3f4fb"
              NavigationPage.HasNavigationBar="False">
 
     <Grid>
@@ -46,21 +46,22 @@
                                FontAttributes="Bold"
                                TextColor="Black"
                                HorizontalOptions="Center"
-                               Margin="0,14,0,6"/>
+                               Margin="0,24,0,6"/>
                             <Entry x:Name="EmailEntry"
                                Placeholder="Email"
                                Keyboard="Email"
                                FontSize="17"
-                               BackgroundColor="#F7FAFA"
+                               BackgroundColor="#FFFFFF"
                                TextColor="#222"
                                HeightRequest="46"
                                Margin="0"
+                                   
                                PlaceholderColor="#A0A0A0"/>
                             <Entry x:Name="PasswordEntry"
                                Placeholder="Password"
                                IsPassword="True"
                                FontSize="17"
-                               BackgroundColor="#F7FAFA"
+                               BackgroundColor="#FFFFFF"
                                TextColor="#222"
                                HeightRequest="46"
                                Margin="0"
@@ -71,7 +72,6 @@
                                FontSize="15"
                                TextColor="#1976D2"
                                HorizontalOptions="End"
-                               Cursor="Hand"
                                Margin="0,0,4,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnForgotPasswordTapped"/>

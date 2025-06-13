@@ -13,7 +13,7 @@ namespace DoctorApp1.Views
         public UserDashboardPage(DoctorUser currentUser)
         {
             InitializeComponent();
-            _currentUser = currentUser; // Pass the logged-in user to the dashboard
+            _currentUser = currentUser;
         }
 
         private async void OnChangePasswordClicked(object sender, EventArgs e)

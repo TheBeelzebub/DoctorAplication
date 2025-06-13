@@ -1,13 +1,14 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.MainPage"
-             BackgroundColor="White"
+             BackgroundColor="#f3f4fb"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid Padding="28" BackgroundColor="White" Margin="0"
+    <Grid Padding="28" Margin="0"
           VerticalOptions="Start" HorizontalOptions="Center"
           RowDefinitions="Auto,Auto,Auto,Auto,*"
-          ColumnDefinitions="*,Auto,Auto">
+          ColumnDefinitions="*,Auto,Auto"
+          BackgroundColor="#f3f4fb">
 
         <!-- User Dashboard button (left of logout) -->
         <Button 
@@ -60,14 +61,14 @@
         <!-- Search and buttons row with padding -->
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Padding="50,0,50,0" Margin="0,32,0,0"
               ColumnDefinitions="0.55*,Auto,Auto"
-              WidthRequest="1000">
+              WidthRequest="820">
 
             <Entry
                 x:Name="SearchEntry"
                 Placeholder="Search patients"
                 FontSize="16"
                 HeightRequest="32"
-                BackgroundColor="#F6F7FB"
+                BackgroundColor="#FFFFFF"
                 PlaceholderColor="#4DD0E1"
                 Margin="0,0,12,0"
                 HorizontalOptions="FillAndExpand"
@@ -106,7 +107,7 @@
         <!-- Headers for patient list -->
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
               ColumnDefinitions="*,Auto"
-              WidthRequest="900">
+              WidthRequest="720">
 
             <Label
                 Text="Patients"
@@ -131,7 +132,7 @@
         <!-- Patients list -->
         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
               ColumnDefinitions="*,Auto"
-              WidthRequest="1000">
+              WidthRequest="820">
             <ListView
                 x:Name="PatientsList"
                 Grid.Row="4"
@@ -152,7 +153,7 @@
                                 Padding="0"
                                 Stroke="#D0D0D0"
                                 StrokeThickness="1"
-                                BackgroundColor="#FAFBFF"
+                                BackgroundColor="#FFFFFF"
                                 HeightRequest="44"
                                 VerticalOptions="Center"
                                 StrokeShape="RoundRectangle 6">

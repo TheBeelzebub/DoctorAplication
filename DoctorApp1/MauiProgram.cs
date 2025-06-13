@@ -4,7 +4,9 @@ using Microsoft.Maui.LifecycleEvents;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Windows.Graphics;
+using Microsoft.Maui.Handlers;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 #endif
 #if MACCATALYST
 using UIKit;
@@ -54,6 +56,15 @@ public static class MauiProgram
                         }
                     });
                 });
+
+                // Remove shadow from all Buttons on Windows globally
+                Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping("NoShadow", (handler, view) =>
+                {
+                    if (handler.PlatformView is Microsoft.UI.Xaml.Controls.Button nativeButton)
+                    {
+                        nativeButton.Shadow = null;
+                    }
+                });
 #endif
 #if MACCATALYST
                 events.AddiOS(w =>
@@ -72,6 +83,16 @@ public static class MauiProgram
                             }
                         }
                     });
+                });
+
+                Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoGlow", (handler, view) =>
+                {
+#if WINDOWS
+                    if (handler.PlatformView is Microsoft.UI.Xaml.Controls.TextBox textBox)
+                    {
+                        textBox.UseSystemFocusVisuals = false;
+                    }
+#endif
                 });
 #endif
             });

@@ -18,56 +18,64 @@
         This avoids setting the Content property more than once.
     -->
     <Grid>
-        <!-- Main calendar content -->
-        <StackLayout Padding="20" Spacing="16">
-            <!-- Page Title -->
-            <Label Text="Appointments Calendar"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+        <!-- Main calendar content with scrolling enabled -->
+        <ScrollView>
+            <StackLayout Padding="20" Spacing="16">
+                <!-- Page Title -->
+                <Label Text="Appointments Calendar"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" />
 
-            <!-- View mode switcher: allows user to toggle between day and week views -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12">
-                <Button Text="Day" Clicked="OnDayViewClicked"/>
-                <Button Text="Week" Clicked="OnWeekViewClicked"/>
+                <!-- View mode switcher: allows user to toggle between day and week views -->
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12">
+                    <Button Text="Day" Clicked="OnDayViewClicked"/>
+                    <Button Text="Week" Clicked="OnWeekViewClicked"/>
+                </StackLayout>
+
+                <!-- Month picker for selecting the month/year (DatePicker is used, but only year/month is extracted) -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
+                    <Picker x:Name="MonthPicker" Title="Month" WidthRequest="120"/>
+                    <Picker x:Name="YearPicker" Title="Year" WidthRequest="100"/>
+                </HorizontalStackLayout>
+
+                <!-- Calendar grid for the selected month -->
+                <Grid x:Name="CalendarGrid"
+                      RowSpacing="2"
+                      ColumnSpacing="2"
+                      Padding="2"
+                      BackgroundColor="#EEE"
+                      Margin="0,10,0,0"/>
+
+                <!--
+                Appointment list for the selected date or week
+                <CollectionView x:Name="appointmentsList"
+                                ItemsSource="{Binding AppointmentsForSelectedDate}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,8" Padding="12" StrokeShape="RoundRectangle 16"
+                                    BackgroundColor="{StaticResource CardBackground}">
+                                <Grid ColumnDefinitions="*,Auto,Auto" VerticalOptions="Center">
+                                    <StackLayout>
+                                        <Label Text="{Binding StartTime, StringFormat='{0:HH:mm}'}" FontAttributes="Bold" />
+                                        <Label Text="{Binding Notes}" />
+                                        <Label Text="{Binding PatientID, StringFormat='Patient ID: {0}'}" FontSize="12" TextColor="{StaticResource SecondaryText}" />
+                                    </StackLayout>
+                                    <Button Grid.Column="1" Text="Edit" Clicked="OnEditAppointmentClicked" CommandParameter="{Binding .}" Padding="8,0"/>
+                                    <Button Grid.Column="2" Text="Delete" Clicked="OnDeleteAppointmentClicked" CommandParameter="{Binding .}" Padding="8,0" TextColor="Red"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                -->
+
+                <!-- Button to add a new appointment -->
+                <Button Text="Add Appointment"
+                        Clicked="OnAddAppointmentClicked"
+                        Margin="0,20,0,0"/>
             </StackLayout>
-
-            <!-- Date picker for selecting the current date -->
-            <DatePicker x:Name="datePicker"
-                        Date="{Binding SelectedDate}"
-                        HorizontalOptions="Center" />
-
-            <!-- Appointment list for the selected date or week -->
-            <CollectionView x:Name="appointmentsList"
-                            ItemsSource="{Binding AppointmentsForSelectedDate}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <!--
-                            Border: Used for each appointment item.
-                            - Displays start time, notes, and patient ID.
-                            - Includes Edit and Delete buttons for each appointment.
-                        -->
-                        <Border Margin="0,8" Padding="12" StrokeShape="RoundRectangle 16"
-                                BackgroundColor="{StaticResource CardBackground}">
-                            <Grid ColumnDefinitions="*,Auto,Auto" VerticalOptions="Center">
-                                <StackLayout>
-                                    <Label Text="{Binding StartTime, StringFormat='{0:HH:mm}'}" FontAttributes="Bold" />
-                                    <Label Text="{Binding Notes}" />
-                                    <Label Text="{Binding PatientID, StringFormat='Patient ID: {0}'}" FontSize="12" TextColor="{StaticResource SecondaryText}" />
-                                </StackLayout>
-                                <Button Grid.Column="1" Text="Edit" Clicked="OnEditAppointmentClicked" CommandParameter="{Binding .}" Padding="8,0"/>
-                                <Button Grid.Column="2" Text="Delete" Clicked="OnDeleteAppointmentClicked" CommandParameter="{Binding .}" Padding="8,0" TextColor="Red"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-            <!-- Button to add a new appointment -->
-            <Button Text="Add Appointment"
-                    Clicked="OnAddAppointmentClicked"
-                    Margin="0,20,0,0"/>
-        </StackLayout>
+        </ScrollView>
 
         <!--
             Modal overlay for adding/editing appointments.
@@ -95,5 +103,3 @@
         </ContentView>
     </Grid>
 </ContentPage>
-
-

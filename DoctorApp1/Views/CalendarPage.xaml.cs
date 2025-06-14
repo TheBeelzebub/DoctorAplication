@@ -1,264 +1,306 @@
-using DoctorApp1.Models;
-using DoctorApp1.Services;
-using Microsoft.Maui.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Collections.Generic;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace DoctorApp1.Views
 {
-    /// <summary>
-    /// Page for viewing, adding, editing, and deleting patient appointments in a calendar view.
-    /// </summary>
     public partial class CalendarPage : ContentPage
     {
-        /// <summary>
-        /// Gets or sets the currently selected date in the calendar.
-        /// </summary>
-        public DateTime SelectedDate { get; set; } = DateTime.Today;
+        public ObservableCollection<Appointment> Appointments { get; set; } = new();
+        public ObservableCollection<Patient> Patients { get; set; } = new();
 
-        /// <summary>
-        /// Gets the collection of appointments for the selected date or week.
-        /// </summary>
-        public ObservableCollection<Appointment> AppointmentsForSelectedDate { get; set; } = new();
+        // For binding to selected date/month in XAML
+        public DateTime SelectedDate { get; set; }
+        public DateTime SelectedMonth { get; set; }
+        public string ModalTitle { get; set; }
 
-        /// <summary>
-        /// Gets the list of patients for selection in the appointment modal.
-        /// </summary>
-        public List<Patient> Patients { get; set; } = new();
+        // For modal editing
+        Appointment editingAppointment = null;
 
-        // Modal state
-        private Appointment _editingAppointment = null;
+        int currentYear;
+        int currentMonth;
 
-        /// <summary>
-        /// Gets or sets the title of the appointment modal.
-        /// </summary>
-        public string ModalTitle { get; set; } = "Add Appointment";
+        public List<string> Months { get; } =
+            System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12).ToList();
 
-        /// <summary>
-        /// Gets or sets the default start time for the modal.
-        /// </summary>
-        public TimeSpan ModalStartTime { get; set; } = new TimeSpan(9, 0, 0);
+        public List<int> Years { get; } =
+            Enumerable.Range(DateTime.Today.Year - 10, 21).ToList();
 
-        /// <summary>
-        /// Gets or sets the default end time for the modal.
-        /// </summary>
-        public TimeSpan ModalEndTime { get; set; } = new TimeSpan(10, 0, 0);
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CalendarPage"/> class.
-        /// </summary>
         public CalendarPage()
         {
             InitializeComponent();
-            BindingContext = this;
 
-            LoadPatients();
-            LoadAppointmentsForDate(SelectedDate);
+            // Set ItemsSource for Pickers
+            MonthPicker.ItemsSource = Months;
+            YearPicker.ItemsSource = Years;
 
-            datePicker.DateSelected += (s, e) =>
-            {
-                SelectedDate = e.NewDate;
-                LoadAppointmentsForDate(SelectedDate);
-            };
+            // Set default selected values (today)
+            MonthPicker.SelectedIndex = DateTime.Today.Month - 1;
+            YearPicker.SelectedItem = DateTime.Today.Year;
+
+            // Events
+            MonthPicker.SelectedIndexChanged += OnMonthOrYearChanged;
+            YearPicker.SelectedIndexChanged += OnMonthOrYearChanged;
+
+            // Set initial SelectedMonth value and load calendar
+            SelectedMonth = new DateTime((int)YearPicker.SelectedItem, MonthPicker.SelectedIndex + 1, 1);
+            LoadCalendar(SelectedMonth.Year, SelectedMonth.Month);
         }
 
-        /// <summary>
-        /// Loads the list of patients from the database and sets up the patient picker.
-        /// </summary>
-        private void LoadPatients()
+        void OnMonthOrYearChanged(object sender, EventArgs e)
         {
-            Patients = App.Database.GetPatients();
-            var patientPicker = this.FindByName<Picker>("PatientPicker");
-            if (patientPicker != null)
+            if (MonthPicker.SelectedIndex == -1 || YearPicker.SelectedItem == null) return;
+            int month = MonthPicker.SelectedIndex + 1;
+            int year = (int)YearPicker.SelectedItem;
+            SelectedMonth = new DateTime(year, month, 1);
+            LoadCalendar(year, month);
+        }
+
+        void LoadCalendar(int year, int month)
+        {
+            CalendarGrid.Children.Clear();
+            CalendarGrid.RowDefinitions.Clear();
+            CalendarGrid.ColumnDefinitions.Clear();
+
+            // 7 columns for days
+            for (int i = 0; i < 7; i++)
+                CalendarGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+
+            // 1 row for day names, 6 for weeks
+            CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Day names
+            for (int r = 0; r < 6; r++)
+                CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(60) }); // weeks
+
+            // Add day-of-week labels to row 0
+            string[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+            for (int i = 0; i < 7; i++)
             {
-                patientPicker.ItemsSource = Patients;
-                patientPicker.ItemDisplayBinding = new Binding("FullName");
+                var dayLabel = new Label
+                {
+                    Text = days[i],
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    FontAttributes = FontAttributes.Bold,
+                    BackgroundColor = Colors.White
+                };
+                CalendarGrid.Add(dayLabel, i, 0);
+            }
+
+            var firstDay = new DateTime(year, month, 1);
+            int startDayOfWeek = (int)firstDay.DayOfWeek;
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+
+            int row = 1;
+            int col = startDayOfWeek;
+
+            // Fill empty cells before the first day
+            for (int i = 0; i < startDayOfWeek; i++)
+            {
+                CalendarGrid.Add(new BoxView { BackgroundColor = Colors.Transparent }, i, 1);
+            }
+
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                var date = new DateTime(year, month, day);
+                var dayAppointments = Appointments.Where(a => a.StartTime.Date == date.Date).ToList();
+
+                // --- APPOINTMENT LISTVIEW WITH GRID TEMPLATE ---
+                var listView = new ListView
+                {
+                    ItemsSource = dayAppointments,
+                    HasUnevenRows = true,
+                    SeparatorVisibility = SeparatorVisibility.None,
+                    ItemTemplate = new DataTemplate(() =>
+                    {
+                        var grid = new Grid
+                        {
+                            ColumnDefinitions =
+                            {
+                                new ColumnDefinition { Width = GridLength.Star },
+                                new ColumnDefinition { Width = GridLength.Auto },
+                                new ColumnDefinition { Width = GridLength.Auto }
+                            },
+                            VerticalOptions = LayoutOptions.Center
+                        };
+
+                        var stack = new StackLayout();
+                        var timeLabel = new Label { FontAttributes = FontAttributes.Bold };
+                        timeLabel.SetBinding(Label.TextProperty, new Binding("StartTime", stringFormat: "{0:HH:mm}"));
+                        var notesLabel = new Label();
+                        notesLabel.SetBinding(Label.TextProperty, "Notes");
+                        var patientIdLabel = new Label { FontSize = 12, TextColor = Colors.Gray };
+                        patientIdLabel.SetBinding(Label.TextProperty, new Binding("PatientID", stringFormat: "Patient ID: {0}"));
+
+                        stack.Children.Add(timeLabel);
+                        stack.Children.Add(notesLabel);
+                        stack.Children.Add(patientIdLabel);
+
+                        grid.Add(stack, 0, 0);
+
+                        var editButton = new Button { Text = "Edit", Padding = new Thickness(8, 0) };
+                        editButton.SetBinding(Button.CommandParameterProperty, ".");
+                        editButton.Clicked += OnEditAppointmentClicked;
+                        grid.Add(editButton, 1, 0);
+
+                        var deleteButton = new Button { Text = "Delete", Padding = new Thickness(8, 0), TextColor = Colors.Red };
+                        deleteButton.SetBinding(Button.CommandParameterProperty, ".");
+                        deleteButton.Clicked += OnDeleteAppointmentClicked;
+                        grid.Add(deleteButton, 2, 0);
+
+                        return new ViewCell { View = grid };
+                    })
+                };
+                // --- END APPOINTMENT LISTVIEW ---
+
+                // Add a border and a day label
+                var border = new Border
+                {
+                    Stroke = Colors.Gray,
+                    Padding = 2,
+                    Content = new VerticalStackLayout
+                    {
+                        Spacing = 2,
+                        Children =
+                        {
+                            new Label
+                            {
+                                Text = day.ToString(),
+                                FontSize = 10,
+                                HorizontalTextAlignment = TextAlignment.Center
+                            },
+                            listView
+                        }
+                    }
+                };
+
+                CalendarGrid.Add(border, col, row);
+
+                col++;
+                if (col == 7)
+                {
+                    col = 0;
+                    row++;
+                }
             }
         }
 
-        /// <summary>
-        /// Loads appointments for the specified date and updates the observable collection.
-        /// </summary>
-        /// <param name="date">The date to filter appointments by.</param>
-        private void LoadAppointmentsForDate(DateTime date)
+        // This method can be expanded to show appointments for the selected day, etc.
+        void OnDayTapped(int year, int month, int day)
         {
-            var allAppointments = App.Database.GetAppointments();
-            var patients = App.Database.GetPatients();
-            var filtered = allAppointments
-                .Where(a => a.StartTime.Date == date.Date)
-                .OrderBy(a => a.StartTime)
-                .ToList();
+            SelectedDate = new DateTime(year, month, day);
+            LoadCalendar(year, month);
+            // You could also display only appointments for SelectedDate
+        }
 
-            AppointmentsForSelectedDate.Clear();
-            foreach (var appt in filtered)
+        void OnDayViewClicked(object sender, EventArgs e)
+        {
+            // TODO: Implement day view switching logic
+        }
+
+        void OnWeekViewClicked(object sender, EventArgs e)
+        {
+            // TODO: Implement week view switching logic
+        }
+
+        void OnAddAppointmentClicked(object sender, EventArgs e)
+        {
+            AppointmentModal.IsVisible = true;
+            ModalTitle = "Add Appointment";
+            PatientPicker.ItemsSource = Patients.Select(p => p.Name).ToList();
+            PatientPicker.SelectedIndex = 0;
+            StartTimePicker.Time = TimeSpan.FromHours(9);
+            EndTimePicker.Time = TimeSpan.FromHours(10);
+            NotesEditor.Text = "";
+            editingAppointment = null;
+        }
+
+        void OnEditAppointmentClicked(object sender, EventArgs e)
+        {
+            // Example - assume CommandParameter is set to the appointment
+            if (sender is Button btn && btn.CommandParameter is Appointment appt)
             {
-                // Set PatientName for display (requires [Ignore] property in Appointment)
-                var patient = patients.FirstOrDefault(p => p.PatientID == appt.PatientID);
-                appt.GetType().GetProperty("PatientName")?.SetValue(appt, patient?.FullName ?? "Unknown");
-                AppointmentsForSelectedDate.Add(appt);
+                AppointmentModal.IsVisible = true;
+                ModalTitle = "Edit Appointment";
+                PatientPicker.ItemsSource = Patients.Select(p => p.Name).ToList();
+                PatientPicker.SelectedIndex = Patients.IndexOf(Patients.FirstOrDefault(p => p.Id == appt.PatientID));
+                StartTimePicker.Time = appt.StartTime.TimeOfDay;
+                EndTimePicker.Time = appt.EndTime.TimeOfDay;
+                NotesEditor.Text = appt.Notes;
+                editingAppointment = appt;
             }
         }
 
-        /// <summary>
-        /// Shows the modal for adding or editing an appointment.
-        /// </summary>
-        /// <param name="title">The modal title.</param>
-        /// <param name="appt">The appointment to edit, or null to add new.</param>
-        private void ShowAppointmentModal(string title, Appointment appt = null)
+        void OnDeleteAppointmentClicked(object sender, EventArgs e)
         {
-            ModalTitle = title;
-            _editingAppointment = appt;
-            var appointmentModal = this.FindByName<ContentView>("AppointmentModal");
-            var patientPicker = this.FindByName<Picker>("PatientPicker");
-            var startTimePicker = this.FindByName<TimePicker>("StartTimePicker");
-            var endTimePicker = this.FindByName<TimePicker>("EndTimePicker");
-            var notesEditor = this.FindByName<Editor>("NotesEditor");
-
-            if (appointmentModal != null)
-                appointmentModal.IsVisible = true;
-
-            // Set modal fields
-            if (appt == null)
+            if (sender is Button btn && btn.CommandParameter is Appointment appt)
             {
-                if (patientPicker != null) patientPicker.SelectedIndex = -1;
-                if (startTimePicker != null) startTimePicker.Time = new TimeSpan(9, 0, 0);
-                if (endTimePicker != null) endTimePicker.Time = new TimeSpan(10, 0, 0);
-                if (notesEditor != null) notesEditor.Text = "";
-            }
-            else
-            {
-                var patientIndex = Patients.FindIndex(p => p.PatientID == appt.PatientID);
-                if (patientPicker != null) patientPicker.SelectedIndex = patientIndex;
-                if (startTimePicker != null) startTimePicker.Time = appt.StartTime.TimeOfDay;
-                if (endTimePicker != null) endTimePicker.Time = appt.EndTime.TimeOfDay;
-                if (notesEditor != null) notesEditor.Text = appt.Notes;
+                Appointments.Remove(appt);
+                LoadCalendar(currentYear, currentMonth);
             }
         }
 
-        /// <summary>
-        /// Handles the Cancel button in the appointment modal.
-        /// </summary>
-        private void OnCancelModal(object sender, EventArgs e)
+        void OnCancelModal(object sender, EventArgs e)
         {
-            var appointmentModal = this.FindByName<ContentView>("AppointmentModal");
-            if (appointmentModal != null)
-                appointmentModal.IsVisible = false;
+            AppointmentModal.IsVisible = false;
         }
 
-        /// <summary>
-        /// Handles the Save button in the appointment modal.
-        /// </summary>
-        private void OnSaveModal(object sender, EventArgs e)
+        void OnSaveModal(object sender, EventArgs e)
         {
-            var patientPicker = this.FindByName<Picker>("PatientPicker");
-            var startTimePicker = this.FindByName<TimePicker>("StartTimePicker");
-            var endTimePicker = this.FindByName<TimePicker>("EndTimePicker");
-            var notesEditor = this.FindByName<Editor>("NotesEditor");
-            var appointmentModal = this.FindByName<ContentView>("AppointmentModal");
-
-            if (patientPicker == null || patientPicker.SelectedIndex < 0)
+            string patientName = PatientPicker.SelectedItem as string;
+            var patient = Patients.FirstOrDefault(p => p.Name == patientName);
+            if (patient == null)
             {
                 DisplayAlert("Error", "Please select a patient.", "OK");
                 return;
             }
-            var patient = Patients[patientPicker.SelectedIndex];
-            var start = SelectedDate.Date + (startTimePicker?.Time ?? new TimeSpan(9, 0, 0));
-            var end = SelectedDate.Date + (endTimePicker?.Time ?? new TimeSpan(10, 0, 0));
-            var notes = notesEditor?.Text ?? "";
 
-            if (_editingAppointment == null)
+            var startDateTime = SelectedDate.Date.Add(StartTimePicker.Time);
+            var endDateTime = SelectedDate.Date.Add(EndTimePicker.Time);
+
+            if (editingAppointment == null)
             {
                 var newAppt = new Appointment
                 {
-                    PatientID = patient.PatientID,
-                    StartTime = start,
-                    EndTime = end,
-                    Notes = notes
+                    Id = Appointments.Count > 0 ? Appointments.Max(a => a.Id) + 1 : 1,
+                    PatientID = patient.Id,
+                    StartTime = startDateTime,
+                    EndTime = endDateTime,
+                    Notes = NotesEditor.Text ?? ""
                 };
-                App.Database.AddAppointment(newAppt);
+                Appointments.Add(newAppt);
             }
             else
             {
-                _editingAppointment.PatientID = patient.PatientID;
-                _editingAppointment.StartTime = start;
-                _editingAppointment.EndTime = end;
-                _editingAppointment.Notes = notes;
-                App.Database.UpdateAppointment(_editingAppointment);
+                editingAppointment.PatientID = patient.Id;
+                editingAppointment.StartTime = startDateTime;
+                editingAppointment.EndTime = endDateTime;
+                editingAppointment.Notes = NotesEditor.Text ?? "";
             }
 
-            if (appointmentModal != null)
-                appointmentModal.IsVisible = false;
-            LoadAppointmentsForDate(SelectedDate);
+            AppointmentModal.IsVisible = false;
+            LoadCalendar(currentYear, currentMonth);
         }
 
-        /// <summary>
-        /// Handles the Add Appointment button click.
-        /// </summary>
-        private void OnAddAppointmentClicked(object sender, EventArgs e)
-        {
-            ShowAppointmentModal("Add Appointment");
-        }
+        // If you want to show appointments for the selected day (for a CollectionView, etc)
+        public ObservableCollection<Appointment> AppointmentsForSelectedDate =>
+            new(Appointments.Where(a => a.StartTime.Date == SelectedDate.Date));
 
-        /// <summary>
-        /// Handles the Edit button click for an appointment.
-        /// </summary>
-        private void OnEditAppointmentClicked(object sender, EventArgs e)
-        {
-            if (sender is Button btn && btn.CommandParameter is Appointment appt)
-            {
-                ShowAppointmentModal("Edit Appointment", appt);
-            }
-        }
+        // You may want to implement INotifyPropertyChanged in a full MVVM setup for property updates
+    }
 
-        /// <summary>
-        /// Handles the Delete button click for an appointment.
-        /// </summary>
-        private async void OnDeleteAppointmentClicked(object sender, EventArgs e)
-        {
-            if (sender is Button btn && btn.CommandParameter is Appointment appt)
-            {
-                bool confirm = await DisplayAlert("Delete", "Delete this appointment?", "Yes", "No");
-                if (!confirm) return;
+    public class Appointment
+    {
+        public int Id { get; set; }
+        public int PatientID { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public string Notes { get; set; }
+    }
 
-                App.Database.DeleteAppointment(appt);
-                LoadAppointmentsForDate(SelectedDate);
-            }
-        }
-
-        /// <summary>
-        /// Switches to day view and reloads appointments for the selected day.
-        /// </summary>
-        private void OnDayViewClicked(object sender, EventArgs e)
-        {
-            LoadAppointmentsForDate(SelectedDate);
-        }
-
-        /// <summary>
-        /// Switches to week view and loads appointments for the selected week.
-        /// </summary>
-        private void OnWeekViewClicked(object sender, EventArgs e)
-        {
-            var allAppointments = App.Database.GetAppointments();
-            var patients = App.Database.GetPatients();
-            var startOfWeek = SelectedDate.Date.AddDays(-(int)SelectedDate.DayOfWeek);
-            var endOfWeek = startOfWeek.AddDays(7);
-
-            var filtered = allAppointments
-                .Where(a => a.StartTime.Date >= startOfWeek && a.StartTime.Date < endOfWeek)
-                .OrderBy(a => a.StartTime)
-                .ToList();
-
-            AppointmentsForSelectedDate.Clear();
-            foreach (var appt in filtered)
-            {
-                var patient = patients.FirstOrDefault(p => p.PatientID == appt.PatientID);
-                appt.GetType().GetProperty("PatientName")?.SetValue(appt, patient?.FullName ?? "Unknown");
-                AppointmentsForSelectedDate.Add(appt);
-            }
-        }
+    public class Patient
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
-
-

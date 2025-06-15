@@ -9,34 +9,39 @@
     <ScrollView>
         <StackLayout 
         Padding="36,0,36,36"
-        WidthRequest="600"
+        WidthRequest="650"
         Spacing="24"
         HorizontalOptions="Center"
         VerticalOptions="Start">
+            <Label Text="User dashboard"
+               FontSize="34"
+               FontAttributes="Bold"
+               TextColor="#222"
+               Margin="0,18,0,0"/>
+            
             <Frame BackgroundColor="White"
                    CornerRadius="18"
-                   Padding="0,25,0,0"
-                   Margin="0"
+                   Padding="0,0,0,0"
+                   Margin="0,16,0,0"
                    HasShadow="True"
                    BorderColor="#E0E2EA"
                    HorizontalOptions="Center"
                    WidthRequest="600">
                 <StackLayout Padding="20,18,20,18" Spacing="18">
                     <Label Text="Change Password"
-                           FontSize="20"
+                           FontSize="22"
                            FontAttributes="Bold"
                            TextColor="#1A1A1A"
                            Margin="0,0,0,16"/>
 
-                    <Grid ColumnDefinitions="180,20,*"
+                    <Grid ColumnDefinitions="200,20,*"
       RowDefinitions="Auto,Auto,Auto"
       BackgroundColor="Transparent"
       Padding="0"
       RowSpacing="12">
 
                         <Label Text="Current Password"
-                           FontAttributes="Bold"
-                           FontSize="15"
+                           FontSize="17"
                            TextColor="#1A1A1A"
                            Padding="0,12"
                            VerticalOptions="Center"
@@ -57,8 +62,7 @@
                         </Border>
 
                         <Label Text="New Password"
-                           FontAttributes="Bold"
-                           FontSize="15"
+                           FontSize="17"
                            TextColor="#1A1A1A"
                            Padding="0,12"
                            VerticalOptions="Center"
@@ -79,8 +83,7 @@
                         </Border>
 
                         <Label Text="Confirm New Password"
-                           FontAttributes="Bold"
-                           FontSize="15"
+                           FontSize="17"
                            TextColor="#1A1A1A"
                            Padding="0,12"
                            VerticalOptions="Center"
@@ -109,7 +112,7 @@
                                 TextColor="White"
                                 CornerRadius="6"
                                 HeightRequest="44"
-                                WidthRequest="150"/>
+                                WidthRequest="160"/>
                     </StackLayout>
                 </StackLayout>
             </Frame>
@@ -125,7 +128,7 @@
                    WidthRequest="600">
                 <StackLayout Padding="20,18,20,18" Spacing="18">
                     <Label Text="Account Management"
-                           FontSize="20"
+                           FontSize="22"
                            FontAttributes="Bold"
                            TextColor="#1A1A1A"
                            Margin="0,0,0,16"/>
@@ -134,7 +137,7 @@
                             TextColor="White"
                             CornerRadius="6"
                             HeightRequest="44"
-                            WidthRequest="180"
+                            WidthRequest="160"
                             Clicked="OnDeleteAccountClicked"/>
                 </StackLayout>
             </Frame>

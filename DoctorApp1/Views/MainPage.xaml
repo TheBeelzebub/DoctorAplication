@@ -66,7 +66,7 @@
             <Border Stroke="#D0D0D0"
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 6"
-                HeightRequest="48"
+                HeightRequest="40"
                 VerticalOptions="Center"
                 Margin="0,0,8,0"
                 BackgroundColor="#FFFFFF">
@@ -118,7 +118,8 @@
         <!-- Headers for patient list -->
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
               ColumnDefinitions="*,Auto"
-              WidthRequest="720">
+              WidthRequest="720"
+              Margin="0,12,0,0">
 
             <Label
                 Text="Patients"

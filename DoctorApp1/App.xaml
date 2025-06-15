@@ -12,13 +12,26 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
             </Style>
 
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="InterRegular" />
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="InterRegular" />
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="FontFamily" Value="InterRegular" />
+            </Style>
+            <Style TargetType="Editor">
+                <Setter Property="FontFamily" Value="InterRegular" />
+            </Style>
+
             <Style TargetType="Button" x:Key="DeleteButtonStyle">
                 <Setter Property="BackgroundColor" Value="#FF5252"/>
                 <Setter Property="TextColor" Value="White"/>
                 <Setter Property="CornerRadius" Value="10"/>
                 <Setter Property="HorizontalOptions" Value="Center"/>
             </Style>
-            
+
             <!-- Add the InverseBoolConverter -->
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
 
@@ -27,7 +40,6 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -7,9 +7,18 @@ using Windows.Graphics;
 using Microsoft.Maui.Handlers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 #endif
 #if MACCATALYST
 using UIKit;
+#endif
+#if ANDROID
+using Android.Graphics.Drawables;
+using Microsoft.Maui.Handlers;
+#endif
+#if IOS
+using UIKit;
+using Microsoft.Maui.Handlers;
 #endif
 
 namespace DoctorApp1;
@@ -46,7 +55,6 @@ public static class MauiProgram
                             appWindow.Resize(new SizeInt32(width, height));
                             appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
 
-                            // Prevent resizing
                             if (appWindow.Presenter is OverlappedPresenter presenter)
                             {
                                 presenter.IsResizable = false;
@@ -56,27 +64,17 @@ public static class MauiProgram
                         }
                     });
                 });
-
-                // Remove shadow from all Buttons on Windows globally
-                Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping("NoShadow", (handler, view) =>
-                {
-                    if (handler.PlatformView is Microsoft.UI.Xaml.Controls.Button nativeButton)
-                    {
-                        nativeButton.Shadow = null;
-                    }
-                });
 #endif
 #if MACCATALYST
                 events.AddiOS(w =>
                 {
                     w.SceneWillConnect((scene, session, options) =>
                     {
-                        if (scene is UIWindowScene windowScene)
+                        if (scene is UIKit.UIWindowScene windowScene)
                         {
-                            var window = UIApplication.SharedApplication.Windows.FirstOrDefault();
+                            var window = UIKit.UIApplication.SharedApplication.Windows.FirstOrDefault();
                             if (window != null)
                             {
-                                // Set constant size
                                 var size = new CoreGraphics.CGSize(1000, 720);
                                 windowScene.SizeRestrictions.MinimumSize = size;
                                 windowScene.SizeRestrictions.MaximumSize = size;
@@ -84,18 +82,88 @@ public static class MauiProgram
                         }
                     });
                 });
-
-                Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoGlow", (handler, view) =>
-                {
-#if WINDOWS
-                    if (handler.PlatformView is Microsoft.UI.Xaml.Controls.TextBox textBox)
-                    {
-                        textBox.UseSystemFocusVisuals = false;
-                    }
-#endif
-                });
 #endif
             });
+
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoGlow", (handler, view) =>
+        {
+#if WINDOWS
+            if (handler.PlatformView is Microsoft.UI.Xaml.Controls.TextBox textBox)
+            {
+                textBox.UseSystemFocusVisuals = false;
+                textBox.FocusVisualPrimaryBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                textBox.FocusVisualSecondaryBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
+                textBox.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                textBox.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
+                textBox.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
+                var noBorderStyle = new Microsoft.UI.Xaml.Style(typeof(Microsoft.UI.Xaml.Controls.TextBox));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(0)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BorderBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.FocusVisualPrimaryBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.FocusVisualSecondaryBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.UseSystemFocusVisualsProperty, false));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BackgroundProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+
+                textBox.Style = noBorderStyle;
+            }
+#endif
+#if ANDROID
+            if (handler.PlatformView is Android.Widget.EditText editText)
+            {
+                editText.Background = null;
+            }
+#endif
+#if IOS || MACCATALYST
+            if (handler.PlatformView is UIKit.UITextField textField)
+            {
+                textField.Layer.BorderWidth = 0;
+                textField.Layer.ShadowOpacity = 0;
+            }
+#endif
+        });
+
+        Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("NoGlow", (handler, view) =>
+        {
+#if WINDOWS
+            if (handler.PlatformView is Microsoft.UI.Xaml.Controls.TextBox textBox)
+            {
+                textBox.UseSystemFocusVisuals = false;
+                textBox.FocusVisualPrimaryBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                textBox.FocusVisualSecondaryBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
+                textBox.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                textBox.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
+                textBox.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
+                var noBorderStyle = new Microsoft.UI.Xaml.Style(typeof(Microsoft.UI.Xaml.Controls.TextBox));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(0)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BorderBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.FocusVisualPrimaryBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.FocusVisualSecondaryBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.UseSystemFocusVisualsProperty, false));
+                noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BackgroundProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+
+                textBox.Style = noBorderStyle;
+            }
+#endif
+#if ANDROID
+            if (handler.PlatformView is Android.Widget.EditText editText)
+            {
+                editText.Background = null;
+            }
+#endif
+#if IOS || MACCATALYST
+            if (handler.PlatformView is UIKit.UITextView textView)
+            {
+                textView.Layer.BorderWidth = 0;
+                textView.Layer.ShadowOpacity = 0;
+            }
+#endif
+        });
 
 #if DEBUG
         builder.Logging.AddDebug();

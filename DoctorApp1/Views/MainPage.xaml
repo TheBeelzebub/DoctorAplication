@@ -63,18 +63,29 @@
               ColumnDefinitions="0.55*,Auto,Auto"
               WidthRequest="820">
 
-            <Entry
-                x:Name="SearchEntry"
-                Placeholder="Search patients"
-                FontSize="16"
-                HeightRequest="32"
-                BackgroundColor="#FFFFFF"
-                PlaceholderColor="#4DD0E1"
-                Margin="0,0,12,0"
-                HorizontalOptions="FillAndExpand"
+            <Border Stroke="#D0D0D0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 6"
+                HeightRequest="48"
                 VerticalOptions="Center"
-                TextChanged="OnSearchTextChanged"
-                Grid.Column="0"/>
+                Margin="0,0,8,0"
+                BackgroundColor="#FFFFFF">
+                <Grid Padding="0">
+                    <Entry
+                        x:Name="SearchEntry"
+                        Placeholder="Search patients"
+                        FontSize="16"
+                        PlaceholderColor="#4DD0E1"
+                        Margin="10,0"
+                        HorizontalTextAlignment="Start"
+                        VerticalOptions="Center"
+                        TextChanged="OnSearchTextChanged"
+                        BackgroundColor="Transparent"
+                        Grid.Column="0" />
+                </Grid>
+            </Border>
+
+
 
             <Button
                 x:Name="AddPatientButton"

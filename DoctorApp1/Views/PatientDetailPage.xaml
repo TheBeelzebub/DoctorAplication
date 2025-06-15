@@ -226,13 +226,25 @@
 
                 <StackLayout x:Name="EditSection" IsVisible="{Binding IsEditing}" Spacing="12" Margin="0,32,0,0">
                     <Label Text="Edit Patient" FontSize="18" FontAttributes="Bold"/>
-                    <Entry Text="{Binding Patient.FirstName}" Placeholder="First Name" BackgroundColor="#FFFFFF"/>
-                    <Entry Text="{Binding Patient.LastName}" Placeholder="Last Name" BackgroundColor="#FFFFFF"/>
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Text="{Binding Patient.FirstName}" Placeholder="First Name"/>
+                    </Border>
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Text="{Binding Patient.LastName}" Placeholder="Last Name"/>
+                    </Border>
                     <DatePicker Date="{Binding Patient.DateOfBirth}" BackgroundColor="#FFFFFF"/>
-                    <Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email address" BackgroundColor="#FFFFFF"/>
-                    <Entry Text="{Binding Patient.Address}" Placeholder="Address" BackgroundColor="#FFFFFF"/>
-                    <Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation" BackgroundColor="#FFFFFF"/>
-                    <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100" BackgroundColor="#FFFFFF"/>
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email address"/>
+                    </Border>
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Text="{Binding Patient.Address}" Placeholder="Address"/>
+                    </Border>
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation"/>
+                    </Border>
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100"/>
+                    </Border>
                     <StackLayout Orientation="Horizontal" Spacing="10">
                         <Button Text="Save"
                             Clicked="OnSaveClicked"

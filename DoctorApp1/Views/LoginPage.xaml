@@ -42,30 +42,31 @@
 
                         <StackLayout Spacing="20" VerticalOptions="FillAndExpand">
                             <Label Text="Login"
-                               FontSize="34"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               Margin="0,24,0,6"/>
-                            <Entry x:Name="EmailEntry"
-                               Placeholder="Email"
-                               Keyboard="Email"
-                               FontSize="17"
-                               BackgroundColor="#FFFFFF"
-                               TextColor="#222"
-                               HeightRequest="46"
-                               Margin="0"
-                                   
-                               PlaceholderColor="#A0A0A0"/>
-                            <Entry x:Name="PasswordEntry"
-                               Placeholder="Password"
-                               IsPassword="True"
-                               FontSize="17"
-                               BackgroundColor="#FFFFFF"
-                               TextColor="#222"
-                               HeightRequest="46"
-                               Margin="0"
-                               PlaceholderColor="#A0A0A0"/>
+                                   FontSize="34"
+                                   FontAttributes="Bold"
+                                   TextColor="Black"
+                                   HorizontalOptions="Center"
+                                   Margin="0,24,0,6"/>
+                            <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                                <Entry x:Name="EmailEntry"
+                                   Placeholder="Email"
+                                   Keyboard="Email"
+                                   FontSize="17"
+                                   TextColor="#222"
+                                   HeightRequest="46"
+                                   Margin="0"
+                                   PlaceholderColor="#A0A0A0"/>
+                            </Border>
+                            <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                                <Entry x:Name="PasswordEntry"
+                                   Placeholder="Password"
+                                   IsPassword="True"
+                                   FontSize="17"
+                                   TextColor="#222"
+                                   HeightRequest="46"
+                                   Margin="0"
+                                   PlaceholderColor="#A0A0A0"/>
+                            </Border>
 
                             <!-- Forgot Password link -->
                             <Label Text="Forgot password?"

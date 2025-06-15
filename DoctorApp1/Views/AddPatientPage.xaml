@@ -17,23 +17,25 @@
 
                 <StackLayout Spacing="18" Padding="0">
 
-                    <Entry Placeholder="First Name"
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Placeholder="First Name"
                            x:Name="FirstNameEntry"
                            FontSize="17"
-                           BackgroundColor="#FFFFFF"
                            TextColor="#222"
                            HeightRequest="46"
                            Margin="0"
                            PlaceholderColor="#A0A0A0"/>
+                    </Border>
 
-                    <Entry Placeholder="Last Name"
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Placeholder="Last Name"
                            x:Name="LastNameEntry"
                            FontSize="17"
-                           BackgroundColor="#FFFFFF"
                            TextColor="#222"
                            HeightRequest="46"
                            Margin="0"
                            PlaceholderColor="#A0A0A0"/>
+                    </Border>
 
                     <Grid Margin="0,12,0,0" ColumnDefinitions="Auto, *" VerticalOptions="Center">
                         <Label Text="Date of Birth"
@@ -51,41 +53,45 @@
                             Grid.Column="1"/>
                     </Grid>
 
-                    <Entry Placeholder="Contact Info"
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Placeholder="Contact Info"
                            x:Name="ContactInfoEntry"
                            FontSize="17"
-                           BackgroundColor="#FFFFFF"
                            TextColor="#222"
                            HeightRequest="46"
                            Margin="0"
                            PlaceholderColor="#A0A0A0"/>
+                    </Border>
 
-                    <Entry Placeholder="Address"
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Placeholder="Address"
                            x:Name="AddressEntry"
                            FontSize="17"
-                           BackgroundColor="#FFFFFF"
                            TextColor="#222"
                            HeightRequest="46"
                            Margin="0"
                            PlaceholderColor="#A0A0A0"/>
+                    </Border>
 
-                    <Entry Placeholder="Occupation"
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Entry Placeholder="Occupation"
                            x:Name="OccupationEntry"
                            FontSize="17"
-                           BackgroundColor="#FFFFFF"
                            TextColor="#222"
                            HeightRequest="46"
                            Margin="0"
                            PlaceholderColor="#A0A0A0"/>
+                    </Border>
 
-                    <Editor Placeholder="General Notes"
+                    <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                        <Editor Placeholder="General Notes"
                             x:Name="GeneralNotesEntry"
                             FontSize="17"
-                            BackgroundColor="#FFFFFF"
                             TextColor="#222"
                             HeightRequest="100"
                             Margin="0"
                             PlaceholderColor="#A0A0A0"/>
+                    </Border>
 
                     <Button Text="Save"
                             Clicked="OnSaveClicked"

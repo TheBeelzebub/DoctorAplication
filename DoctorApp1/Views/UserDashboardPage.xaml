@@ -28,71 +28,80 @@
                            TextColor="#1A1A1A"
                            Margin="0,0,0,16"/>
 
-                    <Grid ColumnDefinitions="180,*"
-                          RowDefinitions="Auto,Auto,Auto"
-                          BackgroundColor="Transparent"
-                          Padding="0"
-                          RowSpacing="0">
+                    <Grid ColumnDefinitions="180,20,*"
+      RowDefinitions="Auto,Auto,Auto"
+      BackgroundColor="Transparent"
+      Padding="0"
+      RowSpacing="12">
+
                         <Label Text="Current Password"
-                               FontAttributes="Bold"
-                               FontSize="15"
-                               TextColor="#1A1A1A"
-                               Padding="0,12"
-                               VerticalOptions="Center"
-                               Grid.Row="0" Grid.Column="0"/>
-                        <Entry x:Name="CurrentPasswordEntry"
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           TextColor="#1A1A1A"
+                           Padding="0,12"
+                           VerticalOptions="Center"
+                           Grid.Row="0" Grid.Column="0"/>
+                        <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6"
+            Grid.Row="0" Grid.Column="2">
+                            <Entry x:Name="CurrentPasswordEntry"
                                Placeholder="Current Password"
                                IsPassword="True"
                                FontSize="17"
-                               BackgroundColor="#FFFFFF"
                                TextColor="#222"
-                               HeightRequest="40"
-                               WidthRequest="260"
                                PlaceholderColor="#A0A0A0"
-                               Margin="0,6,0,6"
+                               Margin="10,0"
+                               HorizontalOptions="FillAndExpand"
+                               HorizontalTextAlignment="Start"
                                VerticalOptions="Center"
-                               Grid.Row="0" Grid.Column="1"/>
+                               HeightRequest="40"/>
+                        </Border>
 
                         <Label Text="New Password"
-                               FontAttributes="Bold"
-                               FontSize="15"
-                               TextColor="#1A1A1A"
-                               Padding="0,12"
-                               VerticalOptions="Center"
-                               Grid.Row="1" Grid.Column="0"/>
-                        <Entry x:Name="NewPasswordEntry"
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           TextColor="#1A1A1A"
+                           Padding="0,12"
+                           VerticalOptions="Center"
+                           Grid.Row="1" Grid.Column="0"/>
+                        <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6"
+            Grid.Row="1" Grid.Column="2">
+                            <Entry x:Name="NewPasswordEntry"
                                Placeholder="New Password"
                                IsPassword="True"
                                FontSize="17"
-                               BackgroundColor="#FFFFFF"
                                TextColor="#222"
-                               HeightRequest="40"
-                               WidthRequest="260"
                                PlaceholderColor="#A0A0A0"
-                               Margin="0,6,0,6"
+                               Margin="10,0"
+                               HorizontalOptions="FillAndExpand"
+                               HorizontalTextAlignment="Start"
                                VerticalOptions="Center"
-                               Grid.Row="1" Grid.Column="1"/>
+                               HeightRequest="40"/>
+                        </Border>
 
                         <Label Text="Confirm New Password"
-                               FontAttributes="Bold"
-                               FontSize="15"
-                               TextColor="#1A1A1A"
-                               Padding="0,12"
-                               VerticalOptions="Center"
-                               Grid.Row="2" Grid.Column="0"/>
-                        <Entry x:Name="ConfirmNewPasswordEntry"
-                               Placeholder="Confirm New Password"
-                               IsPassword="True"
-                               FontSize="17"
-                               BackgroundColor="#FFFFFF"
-                               TextColor="#222"
-                               HeightRequest="40"
-                               WidthRequest="260"
-                               PlaceholderColor="#A0A0A0"
-                               Margin="0,6,0,6"
-                               VerticalOptions="Center"
-                               Grid.Row="2" Grid.Column="1"/>
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           TextColor="#1A1A1A"
+                           Padding="0,12"
+                           VerticalOptions="Center"
+                           Grid.Row="2" Grid.Column="0"/>
+                        <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6"
+            Grid.Row="2" Grid.Column="2">
+                            <Entry x:Name="ConfirmNewPasswordEntry"
+                           Placeholder="Confirm New Password"
+                           IsPassword="True"
+                           FontSize="17"
+                           TextColor="#222"
+                           PlaceholderColor="#A0A0A0"
+                           Margin="10,0"
+                           HorizontalOptions="FillAndExpand"
+                           HorizontalTextAlignment="Start"
+                           VerticalOptions="Center"
+                           HeightRequest="40"/>
+                        </Border>
+
                     </Grid>
+
                     <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="Center">
                         <Button Text="Change Password"
                                 Clicked="OnChangePasswordClicked"

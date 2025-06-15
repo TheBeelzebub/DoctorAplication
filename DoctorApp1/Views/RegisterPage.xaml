@@ -46,33 +46,36 @@
                                TextColor="Black"
                                HorizontalOptions="Center"
                                Margin="0,24,0,6"/>
-                            <Entry x:Name="EmailEntry"
-                               Placeholder="Email"
-                               Keyboard="Email"
-                               FontSize="17"
-                               BackgroundColor="#F7FAFA"
-                               TextColor="#222"
-                               HeightRequest="46"
-                               Margin="0"
-                               PlaceholderColor="#A0A0A0"/>
-                            <Entry x:Name="PasswordEntry"
-                               Placeholder="Password"
-                               IsPassword="True"
-                               FontSize="17"
-                               BackgroundColor="#F7FAFA"
-                               TextColor="#222"
-                               HeightRequest="46"
-                               Margin="0"
-                               PlaceholderColor="#A0A0A0"/>
-                            <Entry x:Name="ConfirmPasswordEntry"
-                               Placeholder="Confirm Password"
-                               IsPassword="True"
-                               FontSize="17"
-                               BackgroundColor="#F7FAFA"
-                               TextColor="#222"
-                               HeightRequest="46"
-                               Margin="0"
-                               PlaceholderColor="#A0A0A0"/>
+                            <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                                <Entry x:Name="EmailEntry"
+                                   Placeholder="Email"
+                                   Keyboard="Email"
+                                   FontSize="17"
+                                   TextColor="#222"
+                                   HeightRequest="46"
+                                   Margin="0"
+                                   PlaceholderColor="#A0A0A0"/>
+                            </Border>
+                            <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                                <Entry x:Name="PasswordEntry"
+                                   Placeholder="Password"
+                                   IsPassword="True"
+                                   FontSize="17"
+                                   TextColor="#222"
+                                   HeightRequest="46"
+                                   Margin="0"
+                                   PlaceholderColor="#A0A0A0"/>
+                            </Border>
+                            <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                                <Entry x:Name="ConfirmPasswordEntry"
+                                   Placeholder="Confirm Password"
+                                   IsPassword="True"
+                                   FontSize="17"
+                                   TextColor="#222"
+                                   HeightRequest="46"
+                                   Margin="0"
+                                   PlaceholderColor="#A0A0A0"/>
+                            </Border>
 
                             <Button Text="Register"
                                 Clicked="OnRegisterClicked"

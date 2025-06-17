@@ -11,7 +11,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DoctorApp1.Views.CalendarPage"
-             Title="Appointments Calendar">
+             BackgroundColor="#f3f4fb"
+             NavigationPage.HasNavigationBar="False">
 
     <!--
         Use a Grid as the root layout to allow overlaying the modal on top of the main content.
@@ -20,44 +21,51 @@
     <Grid>
         <!-- Main calendar content with scrolling enabled -->
         <ScrollView>
-            <StackLayout Padding="20" Spacing="12">
+            <StackLayout Padding="20" Spacing="5">
                 <!-- Page Title -->
                 <Label Text="Appointments Calendar"
-                       FontSize="26"
-                       FontAttributes="Bold"
-                       HorizontalOptions="Center"
-                       Margin="0,0,0,10"/>
+               FontSize="26"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0,0,0,10"/>
 
-                <!-- View mode switcher: allows user to toggle between day and week views -->
-                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12">
-                    <Button Text="Day" Clicked="OnDayViewClicked" StyleClass="SwitchButton"/>
-                    <Button Text="Week" Clicked="OnWeekViewClicked" StyleClass="SwitchButton"/>
-                </StackLayout>
+                <Grid Padding="0,0,0,0" ColumnSpacing="20" VerticalOptions="Center" HeightRequest="60" x:Name="CalendarUI">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <!-- Month picker for selecting the month/year -->
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10" Margin="0,8,0,8">
-                    <Picker x:Name="MonthPicker" Title="Month" WidthRequest="110" HeightRequest="76" FontSize="15"/>
-                    <Picker x:Name="YearPicker" Title="Year" WidthRequest="90" HeightRequest="76" FontSize="15"/>
-                </HorizontalStackLayout>
+                    <StackLayout Orientation="Horizontal" Grid.Column="0" HorizontalOptions="Start" Spacing="15" VerticalOptions="Center">
+                        <RadioButton x:Name="DayRadio" Content="Day" GroupName="ViewMode" CheckedChanged="OnRadioButtonCheckedChanged" />
+                        <RadioButton x:Name="WeekRadio" Content="Week" GroupName="ViewMode" CheckedChanged="OnRadioButtonCheckedChanged" />
+                    </StackLayout>
 
-                <!-- Calendar grid for the selected month -->
-                <Frame x:Name="CalendarFrame" HasShadow="True" Padding="0" CornerRadius="16" Margin="0,5,0,0" BackgroundColor="#F5F5F5">
+                    <HorizontalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
+                        <Picker x:Name="MonthPicker" WidthRequest="110" HeightRequest="44" FontSize="15" BackgroundColor="#FFFFFF" />
+                        <Picker x:Name="YearPicker" WidthRequest="90" HeightRequest="44" FontSize="15" BackgroundColor="#FFFFFF" />
+                    </HorizontalStackLayout>
+
+                    <Button
+                        Grid.Column="2"
+                        Text="Add Appointment"
+                        Clicked="OnAddAppointmentClicked"
+                        WidthRequest="150"
+                        HeightRequest="44"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        BackgroundColor="#4DD0E1"
+                        TextColor="White"
+                        CornerRadius="6"/>
+                </Grid>
+
+                <Frame x:Name="CalendarFrame" HasShadow="True" Padding="0" CornerRadius="16" Margin="0,0,0,0" BackgroundColor="#F5F5F5">
                     <Grid x:Name="CalendarGrid"
                         RowSpacing="3"
                         ColumnSpacing="3"
                         Padding="3"
                         BackgroundColor="#F5F5F5"/>
                 </Frame>
-
-                <!-- Button to add a new appointment -->
-                <Button Text="Add Appointment"
-                        Clicked="OnAddAppointmentClicked"
-                        Margin="0,18,0,0"
-                        CornerRadius="14"
-                        BackgroundColor="#4D90FE"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        HeightRequest="44"/>
             </StackLayout>
         </ScrollView>
 
@@ -69,17 +77,19 @@
         -->
         <ContentView x:Name="AppointmentModal" IsVisible="False" BackgroundColor="#80000000"
              Grid.RowSpan="1" Grid.ColumnSpan="1">
-    <Border Padding="20" StrokeShape="RoundRectangle 20"
-        BackgroundColor="#FFFFFF"
+            <Border Padding="20" StrokeShape="RoundRectangle 20"
+        BackgroundColor="#f3f4fb"
         VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="350">
-        <StackLayout Spacing="16">
+                <StackLayout Spacing="16">
             <Label Text="{Binding ModalTitle}" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-            <Picker x:Name="PatientPicker" Title="Select Patient"/>
-            <DatePicker x:Name="DatePicker" />
-            <TimePicker x:Name="StartTimePicker" />
-            <TimePicker x:Name="EndTimePicker" />
-            <Editor x:Name="NotesEditor" Placeholder="Notes" HeightRequest="60"/>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="End" Spacing="10">
+                    <Picker x:Name="PatientPicker" Title="Select Patient" BackgroundColor="#FFFFFF"/>
+                    <DatePicker x:Name="DatePicker" BackgroundColor="#FFFFFF"/>
+                    <TimePicker x:Name="StartTimePicker" BackgroundColor="#FFFFFF"/>
+                    <TimePicker x:Name="EndTimePicker" BackgroundColor="#FFFFFF"/>
+                <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                    <Editor x:Name="NotesEditor" Placeholder="Notes" HeightRequest="60"/>
+                </Border>
+             <StackLayout Orientation="Horizontal" HorizontalOptions="End" Spacing="10">
                 <Button Text="Save" Clicked="OnSaveModal"/>
                 <Button Text="Cancel" Clicked="OnCancelModal"/>
             </StackLayout>

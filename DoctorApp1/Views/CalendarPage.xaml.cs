@@ -13,7 +13,6 @@ namespace DoctorApp1.Views
         public ObservableCollection<Appointment> Appointments { get; set; } = new();
         public ObservableCollection<Patient> Patients { get; set; } = new();
 
-        // For binding to selected date/month in XAML
         public DateTime SelectedDate { get; set; }
         public DateTime SelectedMonth { get; set; }
         public string ModalTitle { get; set; }
@@ -46,7 +45,7 @@ namespace DoctorApp1.Views
 
             SelectedMonth = new DateTime((int)YearPicker.SelectedItem, MonthPicker.SelectedIndex + 1, 1);
             ReloadAppointments();
-            LoadCalendar(SelectedMonth.Year, SelectedMonth.Month);
+            DayRadio.IsChecked = true;
 
             AddDeleteButtonToModal();
         }
@@ -57,17 +56,20 @@ namespace DoctorApp1.Views
             var stack = (StackLayout)border.Content;
             var footer = (StackLayout)stack.Children.Last();
 
+            footer.Orientation = StackOrientation.Horizontal;
+
             DeleteButton = new Button
             {
                 Text = "Delete",
                 BackgroundColor = Colors.Red,
                 TextColor = Colors.White,
                 IsVisible = false,
-                Margin = new Thickness(0, 0, 0, 0)
+                Margin = new Thickness(0, 0, 10, 0),
+                HorizontalOptions = LayoutOptions.Start
             };
             DeleteButton.Clicked += OnDeleteModal;
 
-            footer.Children.Insert(1, DeleteButton);
+            footer.Children.Insert(0, DeleteButton);
         }
 
         protected override void OnAppearing()
@@ -107,8 +109,9 @@ namespace DoctorApp1.Views
             CalendarGrid.RowDefinitions.Clear();
             CalendarGrid.ColumnDefinitions.Clear();
 
-            CalendarFrame.WidthRequest = 900;
-            CalendarGrid.WidthRequest = 900;
+            CalendarFrame.WidthRequest = 800;
+            CalendarGrid.WidthRequest = 800;
+            CalendarUI.WidthRequest = CalendarFrame.WidthRequest;
 
             for (int i = 0; i < 7; i++)
                 CalendarGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
@@ -122,9 +125,11 @@ namespace DoctorApp1.Views
             int weekRows = (int)Math.Ceiling(totalCells / 7.0);
 
             for (int r = 0; r < weekRows; r++)
-                CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(100) });
+                CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(80) });
 
-            CalendarGrid.HeightRequest = weekRows * 100 + 40;
+            CalendarGrid.HeightRequest = (weekRows - 1) * 100 + 42;
+            if (weekRows == 6)
+                CalendarGrid.HeightRequest = CalendarGrid.HeightRequest - 19;
             CalendarFrame.HeightRequest = CalendarGrid.HeightRequest;
 
             string[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -151,7 +156,7 @@ namespace DoctorApp1.Views
             }
 
             int maxVisibleRows = 2;
-            int rowHeight = 38;
+            int rowHeight = 30;
 
             for (int day = 1; day <= daysInMonth; day++)
             {
@@ -169,12 +174,12 @@ namespace DoctorApp1.Views
                     SeparatorVisibility = SeparatorVisibility.None,
                     Margin = new Thickness(0, 2, 0, 0),
                     BackgroundColor = Colors.Transparent,
-                    HeightRequest = Math.Min(dayAppointments.Count, maxVisibleRows) * rowHeight + 2,
+                    HeightRequest = Math.Min(dayAppointments.Count, maxVisibleRows) * rowHeight - 2,
                     VerticalOptions = LayoutOptions.Fill,
                     ItemTemplate = new DataTemplate(() =>
                     {
-                        var stack = new StackLayout { Spacing = 2, Padding = new Thickness(1), Orientation = StackOrientation.Vertical };
-                        var timeLabel = new Label { FontAttributes = FontAttributes.Bold, FontSize = 13, TextColor = Color.FromArgb("#222") };
+                        var stack = new StackLayout { Spacing = 1, Padding = new Thickness(1), Orientation = StackOrientation.Vertical };
+                        var timeLabel = new Label { FontAttributes = FontAttributes.Bold, FontSize = 10, TextColor = Color.FromArgb("#222") };
                         timeLabel.SetBinding(Label.TextProperty, new MultiBinding
                         {
                             Bindings = {
@@ -184,7 +189,7 @@ namespace DoctorApp1.Views
                             StringFormat = "{0:HH:mm} - {1:HH:mm}"
                         });
 
-                        var patientNameLabel = new Label { FontSize = 12, TextColor = Color.FromArgb("#444") };
+                        var patientNameLabel = new Label { FontSize = 9, TextColor = Color.FromArgb("#444") };
                         patientNameLabel.SetBinding(Label.TextProperty, new Binding("PatientID", converter: new PatientNameConverter(this)));
 
                         stack.Children.Add(timeLabel);
@@ -211,11 +216,11 @@ namespace DoctorApp1.Views
                             new Label
                             {
                                 Text = day.ToString(),
-                                FontSize = 15,
+                                FontSize = 10,
                                 HorizontalTextAlignment = TextAlignment.Center,
                                 FontAttributes = FontAttributes.Bold,
                                 TextColor = Color.FromArgb("#4D90FE"),
-                                Margin = new Thickness(0,0,0,2)
+                                Margin = new Thickness(0,0,0,0)
                             },
                             listView
                         }
@@ -269,7 +274,8 @@ namespace DoctorApp1.Views
 
             CalendarGrid.WidthRequest = weekColumnWidth * numberOfWeeks + 22;
             if (CalendarFrame != null)
-                CalendarFrame.WidthRequest = weekColumnWidth * numberOfWeeks + 22;
+                CalendarFrame.WidthRequest = weekColumnWidth * numberOfWeeks + 24;
+            CalendarUI.WidthRequest = CalendarFrame.WidthRequest;
 
             var firstDay = new DateTime(year, month, 1);
             int startDayOfWeek = (int)firstDay.DayOfWeek;
@@ -379,7 +385,6 @@ namespace DoctorApp1.Views
             return (int)Math.Ceiling(total / 7.0);
         }
 
-        // Converter to get patient name by ID (used in binding)
         class PatientNameConverter : IValueConverter
         {
             private readonly CalendarPage _page;
@@ -441,7 +446,6 @@ namespace DoctorApp1.Views
             {
                 editingAppointment = tappedAppointment;
 
-                // Always reload patient list and select correct patient object
                 PatientPicker.ItemsSource = App.Database.GetPatients();
                 PatientPicker.ItemDisplayBinding = new Binding("FullName");
                 var patientList = (IEnumerable<Patient>)PatientPicker.ItemsSource;
@@ -510,7 +514,6 @@ namespace DoctorApp1.Views
         {
             if (editingAppointment != null)
             {
-                // Optional: Add confirmation dialog here
                 App.Database.DeleteAppointment(editingAppointment);
                 ReloadAppointments();
                 AppointmentModal.IsVisible = false;
@@ -519,6 +522,25 @@ namespace DoctorApp1.Views
                     LoadCalendar(SelectedMonth.Year, SelectedMonth.Month);
                 else
                     LoadCalendarWeeks(SelectedMonth.Year, SelectedMonth.Month);
+            }
+        }
+
+        private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            if (sender is RadioButton radioButton && radioButton.IsChecked)
+            {
+                string selectedMode = radioButton.Content.ToString();
+
+                if (selectedMode == "Day")
+                {
+                    currentMode = CalendarMode.Day;
+                    LoadCalendar(SelectedMonth.Year, SelectedMonth.Month);
+                }
+                else if (selectedMode == "Week")
+                {
+                    currentMode = CalendarMode.Week;
+                    LoadCalendarWeeks(SelectedMonth.Year, SelectedMonth.Month);
+                }
             }
         }
 

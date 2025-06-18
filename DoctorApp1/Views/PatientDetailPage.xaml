@@ -105,6 +105,48 @@
                 </Frame>
 
                 <StackLayout>
+                    <Label Text="Uploaded Files" FontSize="18" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="3*,*" HeightRequest="260" VerticalOptions="Center" HorizontalOptions="Start">
+
+                        <!-- Images: Horizontal scroll, 3/4 width, double size (240x240), Frame without border or shadow -->
+                        <Frame Grid.Column="0"
+               Padding="8"
+               BackgroundColor="Transparent"
+               CornerRadius="12"
+               HasShadow="False"
+               Margin="0,0,24,0"
+                               BorderColor="Transparent">
+                            <CollectionView ItemsSource="{Binding UploadedFiles}"
+                            ItemsLayout="HorizontalList"
+                            HeightRequest="240"
+                            VerticalOptions="Center"
+                            SelectionMode="Single">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackLayout Padding="4" Spacing="4" VerticalOptions="Center" HorizontalOptions="Center">
+                                            <Image Source="{Binding FilePath}"
+                                   HeightRequest="240"
+                                   WidthRequest="240"
+                                   Aspect="AspectFit"
+                                   IsVisible="{Binding FileType, Converter={StaticResource IsImageConverter}}" />
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Frame>
+
+                        <StackLayout Grid.Column="1"
+                     VerticalOptions="Center"
+                     HorizontalOptions="Center">
+                            <Button Text="Upload File"
+                    Clicked="OnUploadFileClicked"
+                    HeightRequest="44"
+                    WidthRequest="110"/>
+                        </StackLayout>
+                    </Grid>
+                </StackLayout>
+
+                <StackLayout>
                     <Label Text="Medical History"
                        FontSize="18"
                        FontAttributes="Bold"

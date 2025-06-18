@@ -38,6 +38,39 @@ namespace DoctorApp1
             OnPropertyChanged(nameof(UploadedFiles));
         }
 
+        private async void OnUploadFileClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var file = await FilePicker.PickAsync();
+                if (file != null)
+                {
+                    string filePath = Path.Combine(FileSystem.AppDataDirectory, file.FileName);
+                    using (var stream = await file.OpenReadAsync())
+                    using (var fileStream = File.OpenWrite(filePath))
+                    {
+                        await stream.CopyToAsync(fileStream);
+                    }
+
+                    var uploadedFile = new UploadedFile
+                    {
+                        PatientID = Patient.PatientID,
+                        FilePath = filePath,
+                        FileType = Path.GetExtension(filePath),
+                        UploadDate = DateTime.Now
+                    };
+
+                    App.Database.AddUploadedFile(uploadedFile);
+                    UploadedFiles = App.Database.GetUploadedFiles(Patient.PatientID);
+                    OnPropertyChanged(nameof(UploadedFiles));
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"File upload failed: {ex.Message}", "OK");
+            }
+        }
+
         private async void OnEditClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new PatientDetailEditPage(Patient.PatientID));

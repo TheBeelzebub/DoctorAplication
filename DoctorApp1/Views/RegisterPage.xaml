@@ -41,7 +41,7 @@
 
                         <StackLayout Spacing="20" VerticalOptions="FillAndExpand">
                             <Label Text="Register"
-                               FontSize="34"
+                               FontSize="32"
                                FontAttributes="Bold"
                                TextColor="Black"
                                HorizontalOptions="Center"

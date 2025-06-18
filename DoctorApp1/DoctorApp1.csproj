@@ -68,6 +68,9 @@
 		<Compile Update="Views\AddPatientPage.xaml.cs">
 			<DependentUpon>AddPatientPage.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Views\PatientEditPage.xaml.cs">
+		  <DependentUpon>PatientEditPage.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\UserDashboardPage.xaml.cs">
 			<DependentUpon>UserDashboardPage.xaml</DependentUpon>
 		</Compile>
@@ -79,6 +82,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\CalendarPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\PatientEditPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\UserDashboardPage.xaml">
 			<Generator>MSBuild:Compile</Generator>

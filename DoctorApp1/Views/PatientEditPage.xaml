@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorApp1.PatientDetailEditPage"
+             BackgroundColor="#f3f4fb"
+             NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <Grid WidthRequest="820" HorizontalOptions="Center">
+            <StackLayout Padding="36,36,36,24" Spacing="24">
+                <Label Text="Edit Patient" FontSize="20" FontAttributes="Bold" TextColor="#1A1A1A"/>
+
+                <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                    <Entry Text="{Binding Patient.FirstName}" Placeholder="First Name"/>
+                </Border>
+                <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                    <Entry Text="{Binding Patient.LastName}" Placeholder="Last Name"/>
+                </Border>
+                <DatePicker Date="{Binding Patient.DateOfBirth}" BackgroundColor="#FFFFFF"/>
+                <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                    <Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email address"/>
+                </Border>
+                <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                    <Entry Text="{Binding Patient.Address}" Placeholder="Address"/>
+                </Border>
+                <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                    <Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation"/>
+                </Border>
+                <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
+                    <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100"/>
+                </Border>
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Button Text="Save"
+                        Clicked="OnSaveClicked"
+                        BackgroundColor="#4DD0E1"
+                        TextColor="White"
+                        CornerRadius="6"
+                        HeightRequest="44"
+                        WidthRequest="120"/>
+                    <Button Text="Cancel"
+                        Clicked="OnCancelClicked"
+                        BackgroundColor="White"
+                        TextColor="#1A1A1A"
+                        BorderColor="#D0D0D0"
+                        CornerRadius="6"
+                        HeightRequest="44"
+                        WidthRequest="120"
+                        BorderWidth="1"/>
+                </StackLayout>
+            </StackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>

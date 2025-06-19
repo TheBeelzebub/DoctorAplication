@@ -72,9 +72,11 @@ namespace DoctorApp1.Services
             return _database.Table<Appointment>().FirstOrDefault(a => a.AppointmentID == appointmentId);
         }
 
-        public void AddAppointment(Appointment appointment)
+        public int AddAppointment(Appointment appointment)
         {
             _database.Insert(appointment);
+
+            return appointment.AppointmentID;
         }
 
         public void UpdateAppointment(Appointment appointment)

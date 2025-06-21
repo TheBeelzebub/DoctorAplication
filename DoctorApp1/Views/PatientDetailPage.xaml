@@ -105,7 +105,7 @@
                 </Frame>
 
                 <StackLayout>
-                    <Label Text="Uploaded Files" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="Uploaded Files" FontSize="18" FontAttributes="Bold" TextColor="#1A1A1A"/>
                     <Grid ColumnDefinitions="3*,*" HeightRequest="260" VerticalOptions="Center" HorizontalOptions="Start">
 
                         <!-- Images: Horizontal scroll, 3/4 width, double size (240x240), Frame without border or shadow -->
@@ -136,13 +136,19 @@
                         </Frame>
 
                         <StackLayout Grid.Column="1"
-                     VerticalOptions="Center"
-                     HorizontalOptions="Center">
+             VerticalOptions="Center"
+             HorizontalOptions="Center">
                             <Button Text="Upload File"
-                    Clicked="OnUploadFileClicked"
-                    HeightRequest="44"
-                    WidthRequest="110"/>
+            Clicked="OnUploadFileClicked"
+            HeightRequest="44"
+            WidthRequest="110"
+            BackgroundColor="#FFFFFF"
+            BorderColor="#D0D0D0"
+            BorderWidth="1"
+            CornerRadius="8"
+            TextColor="#222" />
                         </StackLayout>
+
                     </Grid>
                 </StackLayout>
 

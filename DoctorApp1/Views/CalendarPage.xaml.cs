@@ -5,11 +5,13 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using DoctorApp1.Models;
 using System.Collections.Generic;
+using DoctorApp1.Services;
 
 namespace DoctorApp1.Views
 {
     public partial class CalendarPage : ContentPage
     {
+        private readonly AppointmentNotificationService notificationService;
         public ObservableCollection<Appointment> Appointments { get; set; } = new();
         public ObservableCollection<Patient> Patients { get; set; } = new();
 
@@ -30,9 +32,10 @@ namespace DoctorApp1.Views
         public List<int> Years { get; } =
             Enumerable.Range(DateTime.Today.Year - 10, 21).ToList();
 
-        public CalendarPage()
+        public CalendarPage(AppointmentNotificationService notificationService)
         {
             InitializeComponent();
+            this.notificationService = notificationService;
 
             MonthPicker.ItemsSource = Months;
             YearPicker.ItemsSource = Years;
@@ -491,6 +494,9 @@ namespace DoctorApp1.Views
                 };
 
                 App.Database.AddAppointment(appointment);
+                Appointments.Add(appointment);
+
+                notificationService.ScheduleNotification(appointment, selectedPatient);
             }
             else
             {
@@ -499,6 +505,8 @@ namespace DoctorApp1.Views
                 editingAppointment.EndTime = DatePicker.Date.Add(EndTimePicker.Time);
                 editingAppointment.Notes = NotesEditor.Text;
                 App.Database.UpdateAppointment(editingAppointment);
+
+                notificationService.RescheduleNotification(editingAppointment, selectedPatient);
             }
 
             ReloadAppointments();
@@ -510,11 +518,16 @@ namespace DoctorApp1.Views
                 LoadCalendarWeeks(SelectedMonth.Year, SelectedMonth.Month);
         }
 
+
         void OnDeleteModal(object sender, EventArgs e)
         {
             if (editingAppointment != null)
             {
                 App.Database.DeleteAppointment(editingAppointment);
+                Appointments.Remove(editingAppointment);
+
+                notificationService.CancelNotification(editingAppointment.AppointmentID);
+
                 ReloadAppointments();
                 AppointmentModal.IsVisible = false;
 
@@ -524,6 +537,7 @@ namespace DoctorApp1.Views
                     LoadCalendarWeeks(SelectedMonth.Year, SelectedMonth.Month);
             }
         }
+
 
         private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e)
         {

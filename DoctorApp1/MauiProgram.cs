@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using System.Runtime.InteropServices;
+using DoctorApp1.Services;
+using DoctorApp1.Views;
+
 
 #if WINDOWS
 using Microsoft.UI;
@@ -31,7 +34,7 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         builder
-            .UseMauiApp<App>()
+            .UseMauiApp<App>()  // We will inject AppointmentNotificationService into App constructor
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Inter-VariableFont.ttf", "InterRegular");
@@ -191,6 +194,14 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
+        // Register AppointmentNotificationService as singleton
+        builder.Services.AddSingleton<AppointmentNotificationService>();
+
+        // Register App for constructor injection of AppointmentNotificationService
+        builder.Services.AddSingleton<App>();
+
+        builder.Services.AddSingleton<AppointmentNotificationService>();
+        builder.Services.AddTransient<CalendarPage>();
         return builder.Build();
     }
 

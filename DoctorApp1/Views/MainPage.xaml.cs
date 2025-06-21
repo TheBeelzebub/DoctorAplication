@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Maui.Storage;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace DoctorApp1
 {
@@ -77,12 +79,23 @@ namespace DoctorApp1
         }
 
         private async void OnOpenCalendarClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new CalendarPage());
-        }
+    {
+        var serviceProvider = Application.Current.Handler?.MauiContext?.Services;
+        var calendarPage = serviceProvider?.GetService<CalendarPage>();
 
-        // Logout functionality
-        private async void OnLogoutClicked(object sender, EventArgs e)
+        if (calendarPage != null)
+        {
+            await Navigation.PushAsync(calendarPage);
+        }
+        else
+        {
+            await DisplayAlert("Error", "Unable to open Calendar page.", "OK");
+        }
+    }
+
+
+    // Logout functionality
+    private async void OnLogoutClicked(object sender, EventArgs e)
         {
             bool confirm = await DisplayAlert("Logout", "Are you sure you want to log out?", "Yes", "Cancel");
             if (!confirm)

@@ -1,22 +1,46 @@
 ﻿using DoctorApp1.Services;
 using DoctorApp1.Views; // Needed for LoginPage and MainPage
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage; // For Preferences
+using System.IO;
+using System.Linq;
 
 namespace DoctorApp1
 {
     public partial class App : Application
     {
         public static DatabaseService Database { get; private set; } = null!;
+        private readonly AppointmentNotificationService notificationService;
 
-        public App()
+        // Inject AppointmentNotificationService via constructor
+        public App(AppointmentNotificationService notificationService)
         {
             InitializeComponent();
+
+            this.notificationService = notificationService;
 
             // Initialize the database
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "doctorapp.db");
             Database = new DatabaseService(dbPath);
 
-        }   
+            // Schedule notifications for all upcoming appointments
+            RescheduleAllNotifications();
+        }
+
+        private void RescheduleAllNotifications()
+        {
+            var appointments = Database.GetAppointments();
+            var patients = Database.GetPatients();
+
+            foreach (var appt in appointments)
+            {
+                var patient = patients.FirstOrDefault(p => p.PatientID == appt.PatientID);
+                if (patient != null)
+                {
+                    notificationService.ScheduleNotification(appt, patient);
+                }
+            }
+        }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {

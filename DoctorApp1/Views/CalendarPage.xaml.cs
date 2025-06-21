@@ -490,18 +490,7 @@ namespace DoctorApp1.Views
                     Notes = NotesEditor.Text
                 };
 
-                int newAppointmentId = App.Database.AddAppointment(appointment);
-                appointment.AppointmentID = newAppointmentId;
-
-                // Schedule notification
-#if WINDOWS
-                var notificationId = $"appt_{appointment.AppointmentID}";
-                DoctorApp1.Platforms.Windows.NotificationService.ScheduleToast(
-                    notificationId,
-                    "Appointment Reminder",
-                    $"You have an appointment with {selectedPatient.FullName} at {appointment.StartTime:HH:mm}.",
-                    appointment.StartTime.AddMinutes(-10)); // Notify 10 mins before
-#endif
+                App.Database.AddAppointment(appointment);
             }
             else
             {
@@ -509,18 +498,7 @@ namespace DoctorApp1.Views
                 editingAppointment.StartTime = DatePicker.Date.Add(StartTimePicker.Time);
                 editingAppointment.EndTime = DatePicker.Date.Add(EndTimePicker.Time);
                 editingAppointment.Notes = NotesEditor.Text;
-
                 App.Database.UpdateAppointment(editingAppointment);
-
-                // Update notification
-#if WINDOWS
-                var notificationId = $"appt_{editingAppointment.AppointmentID}";
-                DoctorApp1.Platforms.Windows.NotificationService.ScheduleToast(
-                    notificationId,
-                    "Appointment Reminder",
-                    $"You have an appointment with {selectedPatient.FullName} at {editingAppointment.StartTime:HH:mm}.",
-                    editingAppointment.StartTime.AddMinutes(-10));
-#endif
             }
 
             ReloadAppointments();
@@ -537,13 +515,6 @@ namespace DoctorApp1.Views
             if (editingAppointment != null)
             {
                 App.Database.DeleteAppointment(editingAppointment);
-
-                // Remove notification
-#if WINDOWS
-                var notificationId = $"appt_{editingAppointment.AppointmentID}";
-                DoctorApp1.Platforms.Windows.NotificationService.RemoveScheduledToast(notificationId);
-#endif
-
                 ReloadAppointments();
                 AppointmentModal.IsVisible = false;
 

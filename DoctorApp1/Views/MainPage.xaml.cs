@@ -2,39 +2,45 @@
 using DoctorApp1.Services;
 using DoctorApp1.Views;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Maui.Storage;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-
 
 namespace DoctorApp1
 {
     public partial class MainPage : ContentPage
     {
-        public List<Models.Patient> Patients { get; set; } = new List<Models.Patient>();
+        public List<Patient> Patients { get; set; } = new List<Patient>();
+        public List<Appointment> MissedAppointments { get; set; } = new List<Appointment>();
+
         private string _loggedInEmail = string.Empty;
         private DoctorUser _currentUser;
 
-        // Constructor for login use
-        public MainPage(string email)
+        private readonly AppointmentNotificationService notificationService;
+
+        // Constructor for login use, now accepting notification service
+        public MainPage(string email, AppointmentNotificationService notificationService)
         {
             InitializeComponent();
             _loggedInEmail = email.Trim().ToLower();
 
-            // Retrieve the current user from the database
             _currentUser = App.Database.GetUserByEmail(_loggedInEmail);
+
+            this.notificationService = notificationService;
 
             BindingContext = this;
             LoadPatients();
         }
 
-        // Default constructor
-        public MainPage()
+        // Default constructor with notification service injection
+        public MainPage(AppointmentNotificationService notificationService)
         {
             InitializeComponent();
+
+            this.notificationService = notificationService;
+
             BindingContext = this;
             LoadPatients();
         }
@@ -42,15 +48,60 @@ namespace DoctorApp1
         protected override void OnAppearing()
         {
             base.OnAppearing();
+
             LoadPatients();
+
+            notificationService.MarkMissedNotifications();
+
+            var missedAppointments = notificationService.GetMissedAppointments();
+
+            if (missedAppointments.Any())
+            {
+                ShowMissedNotificationsPopup(missedAppointments);
+            }
         }
+
+        private void ShowMissedNotificationsPopup(List<Appointment> missedAppointments)
+        {
+            // 🔧 Save to global field so it can be cleared later
+            MissedAppointments = missedAppointments;
+
+            MissedAppointmentsStack.Children.Clear();
+
+            foreach (var appt in missedAppointments)
+            {
+                var patient = App.Database.GetPatients().FirstOrDefault(p => p.PatientID == appt.PatientID);
+                string fullName = patient?.FullName ?? "Unknown";
+
+                var label = new Label
+                {
+                    Text = $"Appointment with {fullName} at {appt.StartTime:HH:mm, MMM dd}",
+                    FontSize = 16,
+                    Margin = new Thickness(0, 5)
+                };
+
+                MissedAppointmentsStack.Children.Add(label);
+            }
+
+            MissedNotificationsPopup.IsVisible = true;
+        }
+
+        private void OnCloseMissedPopupClicked(object sender, EventArgs e)
+        {
+            foreach (var appt in MissedAppointments)
+            {
+                notificationService.ClearMissedNotification(appt.AppointmentID);
+            }
+
+            MissedAppointments.Clear();
+            MissedNotificationsPopup.IsVisible = false;
+        }
+
 
         private void LoadPatients()
         {
             var allPatients = App.Database.GetPatients();
-            // Patients = allPatients.Where(p => p.DoctorEmail == _loggedInEmail).ToList(); // If filtering by doctor
             Patients = allPatients;
-
             OnPropertyChanged(nameof(Patients));
         }
 
@@ -66,7 +117,7 @@ namespace DoctorApp1
 
         private async void OnPatientSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (e.SelectedItem is Models.Patient selectedPatient)
+            if (e.SelectedItem is Patient selectedPatient)
             {
                 await Navigation.PushAsync(new PatientDetailPage(selectedPatient.PatientID));
                 ((ListView)sender).SelectedItem = null;
@@ -79,32 +130,29 @@ namespace DoctorApp1
         }
 
         private async void OnOpenCalendarClicked(object sender, EventArgs e)
-    {
-        var serviceProvider = Application.Current.Handler?.MauiContext?.Services;
-        var calendarPage = serviceProvider?.GetService<CalendarPage>();
-
-        if (calendarPage != null)
         {
-            await Navigation.PushAsync(calendarPage);
-        }
-        else
-        {
-            await DisplayAlert("Error", "Unable to open Calendar page.", "OK");
-        }
-    }
+            var serviceProvider = Application.Current.Handler?.MauiContext?.Services;
+            var calendarPage = serviceProvider?.GetService<CalendarPage>();
 
+            if (calendarPage != null)
+            {
+                await Navigation.PushAsync(calendarPage);
+            }
+            else
+            {
+                await DisplayAlert("Error", "Unable to open Calendar page.", "OK");
+            }
+        }
 
-    // Logout functionality
-    private async void OnLogoutClicked(object sender, EventArgs e)
+        // Logout functionality
+        private async void OnLogoutClicked(object sender, EventArgs e)
         {
             bool confirm = await DisplayAlert("Logout", "Are you sure you want to log out?", "Yes", "Cancel");
             if (!confirm)
                 return;
 
-            // Remove the saved login email
             Preferences.Remove("LoggedInEmail");
 
-            // Replace the root page with the login page
             Application.Current?.Dispatcher.Dispatch(() =>
             {
                 if (Application.Current?.Windows.Count > 0)
@@ -128,6 +176,18 @@ namespace DoctorApp1
             else
             {
                 await DisplayAlert("Error", "Unable to load user data. Please log in again.", "OK");
+            }
+        }
+
+        // Clear first missed appointment notification (example handler)
+        private void OnClearMissedAppointmentClicked(object sender, EventArgs e)
+        {
+            if (MissedAppointments.Count > 0)
+            {
+                var appointment = MissedAppointments[0];
+                notificationService.ClearMissedNotification(appointment.AppointmentID);
+                MissedAppointments.RemoveAt(0);
+                OnPropertyChanged(nameof(MissedAppointments));
             }
         }
     }

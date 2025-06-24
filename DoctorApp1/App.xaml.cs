@@ -12,7 +12,6 @@ namespace DoctorApp1
         public static DatabaseService Database { get; private set; } = null!;
         private readonly AppointmentNotificationService notificationService;
 
-        // Inject AppointmentNotificationService via constructor
         public App(AppointmentNotificationService notificationService)
         {
             InitializeComponent();
@@ -23,9 +22,13 @@ namespace DoctorApp1
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "doctorapp.db");
             Database = new DatabaseService(dbPath);
 
+            // <-- Add this line here to mark missed notifications on app start
+            notificationService.MarkMissedNotifications();
+
             // Schedule notifications for all upcoming appointments
             RescheduleAllNotifications();
         }
+
 
         private void RescheduleAllNotifications()
         {
@@ -50,7 +53,7 @@ namespace DoctorApp1
             Page startupPage;
             if (!string.IsNullOrEmpty(email))
             {
-                startupPage = new MainPage(email); // Go directly to the main page
+                startupPage = new MainPage(email, notificationService); // Go directly to the main page
             }
             else
             {

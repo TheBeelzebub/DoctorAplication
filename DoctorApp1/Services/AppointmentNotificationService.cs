@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Maui.ApplicationModel; // for MainThread
-using Microsoft.Maui.Storage;          // for Preferences
-using DoctorApp1.Models;               // your models namespace
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
+using DoctorApp1.Models;
 
 namespace DoctorApp1.Services
 {
@@ -13,32 +13,96 @@ namespace DoctorApp1.Services
     {
         private Dictionary<int, CancellationTokenSource> scheduledNotifications = new();
         private HashSet<int> alertedAppointmentIds = new();
+        private HashSet<int> missedNotificationIds = new();
+        private HashSet<int> seenMissedNotificationIds = new();
+
+        private const string AlertedKey = "AlertedAppointmentIDs";
+        private const string MissedKey = "MissedAppointmentIDs";
+        private const string SeenMissedKey = "SeenMissedAppointmentIDs";
 
         public AppointmentNotificationService()
         {
             LoadAlertedAppointments();
+            LoadMissedNotifications();
+            LoadSeenMissedNotifications();
         }
 
         private void LoadAlertedAppointments()
         {
-            var idsString = Preferences.Get("AlertedAppointmentIDs", "");
-            if (!string.IsNullOrEmpty(idsString))
-            {
-                alertedAppointmentIds = new HashSet<int>(
-                    idsString.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                             .Select(s => int.Parse(s))
-                );
-            }
-            else
-            {
-                alertedAppointmentIds = new HashSet<int>();
-            }
+            var idsString = Preferences.Get(AlertedKey, "");
+            alertedAppointmentIds = ParseIds(idsString);
         }
 
         private void SaveAlertedAppointments()
         {
-            var str = string.Join(",", alertedAppointmentIds);
-            Preferences.Set("AlertedAppointmentIDs", str);
+            Preferences.Set(AlertedKey, string.Join(",", alertedAppointmentIds));
+        }
+
+        private void LoadMissedNotifications()
+        {
+            var missedString = Preferences.Get(MissedKey, "");
+            missedNotificationIds = ParseIds(missedString);
+        }
+
+        private void SaveMissedNotifications()
+        {
+            Preferences.Set(MissedKey, string.Join(",", missedNotificationIds));
+        }
+
+        private void LoadSeenMissedNotifications()
+        {
+            var seenString = Preferences.Get(SeenMissedKey, "");
+            seenMissedNotificationIds = ParseIds(seenString);
+        }
+
+        private void SaveSeenMissedNotifications()
+        {
+            Preferences.Set(SeenMissedKey, string.Join(",", seenMissedNotificationIds));
+        }
+
+        private HashSet<int> ParseIds(string idsString)
+        {
+            return string.IsNullOrWhiteSpace(idsString)
+                ? new HashSet<int>()
+                : new HashSet<int>(idsString.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse));
+        }
+
+        // Detect missed notifications (call on startup or resume)
+        public void MarkMissedNotifications()
+        {
+            var now = DateTime.Now;
+            var appointments = App.Database.GetAppointments();
+
+            foreach (var appt in appointments)
+            {
+                var notifyTime = appt.StartTime.AddMinutes(-10);
+                if (notifyTime < now && !alertedAppointmentIds.Contains(appt.AppointmentID))
+                {
+                    missedNotificationIds.Add(appt.AppointmentID);
+                }
+            }
+
+            SaveMissedNotifications();
+        }
+
+        // Return only missed + unseen notifications
+        public List<Appointment> GetMissedAppointments()
+        {
+            var appointments = App.Database.GetAppointments();
+            return appointments
+                .Where(a => missedNotificationIds.Contains(a.AppointmentID)
+                         && !seenMissedNotificationIds.Contains(a.AppointmentID))
+                .ToList();
+        }
+
+        // Mark one as seen
+        public void ClearMissedNotification(int appointmentId)
+        {
+            if (missedNotificationIds.Remove(appointmentId))
+                SaveMissedNotifications();
+
+            seenMissedNotificationIds.Add(appointmentId);
+            SaveSeenMissedNotifications();
         }
 
         public void ScheduleNotification(Appointment appt, Patient patient)
@@ -46,18 +110,14 @@ namespace DoctorApp1.Services
             if (appt == null || patient == null)
                 return;
 
-            // Cancel existing if any
             CancelNotification(appt.AppointmentID);
 
-            // Skip if already alerted or appointment time passed
             if (alertedAppointmentIds.Contains(appt.AppointmentID) || appt.StartTime <= DateTime.Now)
                 return;
 
             var notifyTime = appt.StartTime.AddMinutes(-10);
             var delay = notifyTime - DateTime.Now;
-
-            if (delay <= TimeSpan.Zero)
-                delay = TimeSpan.Zero;
+            if (delay < TimeSpan.Zero) delay = TimeSpan.Zero;
 
             var cts = new CancellationTokenSource();
             scheduledNotifications[appt.AppointmentID] = cts;
@@ -67,26 +127,30 @@ namespace DoctorApp1.Services
                 try
                 {
                     await Task.Delay(delay, cts.Token);
-
-                    if (cts.Token.IsCancellationRequested)
-                        return;
+                    if (cts.Token.IsCancellationRequested) return;
 
                     string message = $"Appointment is scheduled with {patient.FullName} at {appt.StartTime:HH:mm}";
 
                     await MainThread.InvokeOnMainThreadAsync(() =>
                     {
-                        // You can replace this with your preferred in-app popup/notification method
                         Application.Current.MainPage.DisplayAlert("Upcoming Appointment", message, "OK");
                     });
 
+                    // ✅ Mark as alerted
                     alertedAppointmentIds.Add(appt.AppointmentID);
                     SaveAlertedAppointments();
+
+                    // ✅ Remove from missed and mark as seen
+                    missedNotificationIds.Remove(appt.AppointmentID);
+                    seenMissedNotificationIds.Add(appt.AppointmentID);
+                    SaveMissedNotifications();
+                    SaveSeenMissedNotifications();
 
                     scheduledNotifications.Remove(appt.AppointmentID);
                 }
                 catch (TaskCanceledException)
                 {
-                    // Notification cancelled - do nothing
+                    // Canceled
                 }
             });
         }
@@ -98,6 +162,7 @@ namespace DoctorApp1.Services
                 cts.Cancel();
                 scheduledNotifications.Remove(appointmentId);
             }
+
             alertedAppointmentIds.Remove(appointmentId);
             SaveAlertedAppointments();
         }

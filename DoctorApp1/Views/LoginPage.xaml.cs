@@ -50,7 +50,8 @@ namespace DoctorApp1.Views
             }*/
 
             // Successful login
-            await Navigation.PushAsync(new MainPage(email.Trim().ToLower()));
+            var notificationService = new AppointmentNotificationService();
+            await Navigation.PushAsync(new MainPage(email.Trim().ToLower(), notificationService));
 
         }
 

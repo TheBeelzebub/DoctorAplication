@@ -12,6 +12,7 @@ namespace DoctorApp1
 {
     public partial class MainPage : ContentPage
     {
+        private bool _hasShownTodayAppointmentsPopup = false;
         public List<Patient> Patients { get; set; } = new List<Patient>();
         public List<Appointment> MissedAppointments { get; set; } = new List<Appointment>();
 
@@ -51,14 +52,69 @@ namespace DoctorApp1
 
             LoadPatients();
 
-            notificationService.MarkMissedNotifications();
+            if (_hasShownTodayAppointmentsPopup)
+                return;
 
-            var missedAppointments = notificationService.GetMissedAppointments();
+            _hasShownTodayAppointmentsPopup = true; // mark it as shown
 
-            if (missedAppointments.Any())
+            var upcomingToday = GetTodaysUpcomingAppointments();
+
+            if (upcomingToday.Any())
             {
-                ShowMissedNotificationsPopup(missedAppointments);
+                ShowTodaysAppointmentsPopup(upcomingToday);
             }
+            else
+            {
+                ShowNoAppointmentsPopup();
+            }
+        }
+
+        private void ShowNoAppointmentsPopup()
+        {
+            MissedAppointmentsStack.Children.Clear();
+
+            MissedAppointmentsStack.Children.Add(new Label
+            {
+                Text = "You have no upcoming appointments today.",
+                FontSize = 16,
+                Margin = new Thickness(0, 10)
+            });
+
+            MissedNotificationsPopup.IsVisible = true;
+        }
+
+        private void ShowTodaysAppointmentsPopup(List<Appointment> appointments)
+        {
+            MissedAppointments = appointments;
+            MissedAppointmentsStack.Children.Clear();
+
+            foreach (var appt in appointments)
+            {
+                var patient = App.Database.GetPatients().FirstOrDefault(p => p.PatientID == appt.PatientID);
+                string fullName = patient?.FullName ?? "Unknown";
+
+                MissedAppointmentsStack.Children.Add(new Label
+                {
+                    Text = $"Appointment with {fullName} at {appt.StartTime:HH:mm}",
+                    FontSize = 16,
+                    Margin = new Thickness(0, 5)
+                });
+            }
+
+            MissedNotificationsPopup.IsVisible = true;
+        }
+
+        private List<Appointment> GetTodaysUpcomingAppointments()
+        {
+            var now = DateTime.Now;
+            var appointments = App.Database.GetAppointments();
+
+            return appointments
+                .Where(a =>
+                    a.StartTime.Date == now.Date &&
+                    a.StartTime > now)
+                .OrderBy(a => a.StartTime)
+                .ToList();
         }
 
         private void ShowMissedNotificationsPopup(List<Appointment> missedAppointments)

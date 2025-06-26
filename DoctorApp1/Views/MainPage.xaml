@@ -194,38 +194,46 @@
 
         <!-- Missed Notifications Popup Overlay -->
         <Grid x:Name="MissedNotificationsPopup"
-              BackgroundColor="Transparent"
-              IsVisible="False"
-              VerticalOptions="FillAndExpand"
-              HorizontalOptions="FillAndExpand"
-              Padding="20"
-              Grid.RowSpan="5" Grid.ColumnSpan="3">
+      BackgroundColor="Transparent"
+            IsVisible="False"
+      VerticalOptions="FillAndExpand"
+      HorizontalOptions="FillAndExpand"
+      Padding="20"
+      Grid.RowSpan="5"
+      Grid.ColumnSpan="3"
+      ZIndex="100">
+            <!-- Ensure it's above other elements -->
 
             <Frame BackgroundColor="White"
-                   CornerRadius="10"
-                   Padding="15"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Center"
-                   WidthRequest="320"
-                   HeightRequest="310">
+           CornerRadius="10"
+           Padding="15"
+           VerticalOptions="Center"
+           HorizontalOptions="Center"
+           WidthRequest="320"
+           HeightRequest="310"
+           HasShadow="True">
 
-                <StackLayout>
+                <VerticalStackLayout>
 
-                    <Label Text="Missed Appointments"
-                           FontAttributes="Bold"
-                           FontSize="20"
-                           HorizontalOptions="Center" />
+                    <Label Text="Upcoming Appointments"
+                   FontAttributes="Bold"
+                   FontSize="20"
+                   TextColor="Black"
+                   HorizontalOptions="Center" />
 
                     <ScrollView HeightRequest="200" Margin="0,10,0,10">
-                        <StackLayout x:Name="MissedAppointmentsStack" />
+                        <VerticalStackLayout x:Name="MissedAppointmentsStack" />
                     </ScrollView>
 
-                    <Button Text="Close" Clicked="OnCloseMissedPopupClicked" />
+                    <Button Text="Close"
+                    Clicked="OnCloseMissedPopupClicked"
+                    TextColor="Black" />
 
-                </StackLayout>
+                </VerticalStackLayout>
             </Frame>
 
         </Grid>
+
 
     </Grid>
 </ContentPage>

@@ -20,6 +20,8 @@ namespace DoctorApp1.Services
         private const string MissedKey = "MissedAppointmentIDs";
         private const string SeenMissedKey = "SeenMissedAppointmentIDs";
 
+        public bool EnableGlobalPopups { get; set; } = false; //flag for enabling global popups
+
         public AppointmentNotificationService()
         {
             LoadAlertedAppointments();
@@ -67,7 +69,6 @@ namespace DoctorApp1.Services
                 : new HashSet<int>(idsString.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse));
         }
 
-        // Detect missed notifications (call on startup or resume)
         public void MarkMissedNotifications()
         {
             var now = DateTime.Now;
@@ -85,7 +86,6 @@ namespace DoctorApp1.Services
             SaveMissedNotifications();
         }
 
-        // Return only missed + unseen notifications
         public List<Appointment> GetMissedAppointments()
         {
             var appointments = App.Database.GetAppointments();
@@ -95,7 +95,6 @@ namespace DoctorApp1.Services
                 .ToList();
         }
 
-        // Mark one as seen
         public void ClearMissedNotification(int appointmentId)
         {
             if (missedNotificationIds.Remove(appointmentId))
@@ -131,16 +130,17 @@ namespace DoctorApp1.Services
 
                     string message = $"Appointment is scheduled with {patient.FullName} at {appt.StartTime:HH:mm}";
 
-                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    if (EnableGlobalPopups)
                     {
-                        Application.Current.MainPage.DisplayAlert("Upcoming Appointment", message, "OK");
-                    });
+                        await MainThread.InvokeOnMainThreadAsync(() =>
+                        {
+                            Application.Current.MainPage.DisplayAlert("Upcoming Appointment", message, "OK");
+                        });
+                    }
 
-                    // ✅ Mark as alerted
                     alertedAppointmentIds.Add(appt.AppointmentID);
                     SaveAlertedAppointments();
 
-                    // ✅ Remove from missed and mark as seen
                     missedNotificationIds.Remove(appt.AppointmentID);
                     seenMissedNotificationIds.Add(appt.AppointmentID);
                     SaveMissedNotifications();

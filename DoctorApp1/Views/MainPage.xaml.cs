@@ -97,7 +97,8 @@ namespace DoctorApp1
                 {
                     Text = $"Appointment with {fullName} at {appt.StartTime:HH:mm}",
                     FontSize = 16,
-                    Margin = new Thickness(0, 5)
+                    Margin = new Thickness(0, 5),
+                    TextColor = Colors.Black
                 });
             }
 

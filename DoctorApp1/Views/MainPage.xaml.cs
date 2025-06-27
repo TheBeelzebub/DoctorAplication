@@ -77,7 +77,8 @@ namespace DoctorApp1
             {
                 Text = "You have no upcoming appointments today.",
                 FontSize = 16,
-                Margin = new Thickness(0, 10)
+                Margin = new Thickness(0, 10),
+                TextColor = Colors.Black
             });
 
             MissedNotificationsPopup.IsVisible = true;

@@ -16,7 +16,7 @@
                 <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
                     <Entry Text="{Binding Patient.LastName}" Placeholder="Last Name" TextColor="#222" BackgroundColor="#FFFFFF"/>
                 </Border>
-                <DatePicker Date="{Binding Patient.DateOfBirth}" BackgroundColor="#FFFFFF" TextColor="#222"/>
+                <DatePicker Date="{Binding Patient.DateOfBirth}" BackgroundColor="#FFFFFF"/>
                 <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
                     <Entry Text="{Binding Patient.ContactInfo}" Placeholder="Email address" TextColor="#222" BackgroundColor="#FFFFFF"/>
                 </Border>
@@ -27,7 +27,7 @@
                     <Entry Text="{Binding Patient.Occupation}" Placeholder="Occupation" TextColor="#222" BackgroundColor="#FFFFFF"/>
                 </Border>
                 <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
-                    <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100" TextColor="#222"/>
+                    <Editor Text="{Binding Patient.GeneralNotes}" Placeholder="Notes" HeightRequest="100" TextColor="#222" BackgroundColor="#FFFFFF"/>
                 </Border>
                 <StackLayout Orientation="Horizontal" Spacing="10">
                     <Button Text="Save"

@@ -27,8 +27,7 @@
                FontSize="26"
                FontAttributes="Bold"
                HorizontalOptions="Center"
-               Margin="0,0,0,10"
-               TextColor="#222"/>
+               Margin="0,0,0,10"/>
 
                 <Grid Padding="0,0,0,0" ColumnSpacing="20" VerticalOptions="Center" HeightRequest="60" x:Name="CalendarUI">
                     <Grid.ColumnDefinitions>
@@ -84,11 +83,11 @@
                 <StackLayout Spacing="16">
             <Label Text="{Binding ModalTitle}" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
                     <Picker x:Name="PatientPicker" Title="Select Patient" BackgroundColor="#FFFFFF"/>
-                    <DatePicker x:Name="DatePicker" BackgroundColor="#FFFFFF" TextColor="#222"/>
+                    <DatePicker x:Name="DatePicker" BackgroundColor="#FFFFFF"/>
                     <TimePicker x:Name="StartTimePicker" BackgroundColor="#FFFFFF"/>
                     <TimePicker x:Name="EndTimePicker" BackgroundColor="#FFFFFF"/>
                 <Border Stroke="#D0D0D0" StrokeThickness="1" BackgroundColor="#FFFFFF" StrokeShape="RoundRectangle 6">
-                        <Editor x:Name="NotesEditor" Placeholder="Notes" HeightRequest="60" TextColor="#222"/>
+                        <Editor x:Name="NotesEditor" Placeholder="Notes" HeightRequest="60" BackgroundColor="#FFFFFF"/>
                 </Border>
              <StackLayout Orientation="Horizontal" HorizontalOptions="End" Spacing="10">
                         <Button Text="Save"

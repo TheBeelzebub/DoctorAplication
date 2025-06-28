@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using DoctorApp1.Services;
 using DoctorApp1.Views;
 
+
 #if WINDOWS
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -33,7 +34,7 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         builder
-            .UseMauiApp<App>()
+            .UseMauiApp<App>()  // We will inject AppointmentNotificationService into App constructor
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Inter-VariableFont.ttf", "InterRegular");
@@ -53,15 +54,17 @@ public static class MauiProgram
                         var mauiWinUIWindow = (Microsoft.UI.Xaml.Window)window;
                         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(mauiWinUIWindow);
 
+                        // Prevent double-click maximize on title bar (WM_NCLBUTTONDBLCLK)
                         const int GWL_WNDPROC = -4;
                         IntPtr originalWndProc = NativeMethods.GetWindowLongPtr(hwnd, GWL_WNDPROC);
 
+                        // Keep delegate in static field so it isn't GC'd
                         NativeMethods.NewWndProcDelegate = (hWnd, msg, wParam, lParam) =>
                         {
                             const int WM_NCLBUTTONDBLCLK = 0x00A3;
 
                             if (msg == WM_NCLBUTTONDBLCLK)
-                                return IntPtr.Zero;
+                                return IntPtr.Zero; // Block maximize
 
                             return NativeMethods.CallWindowProc(originalWndProc, hWnd, msg, wParam, lParam);
                         };
@@ -118,6 +121,7 @@ public static class MauiProgram
 
                 textBox.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
                 textBox.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
                 textBox.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
 
                 var noBorderStyle = new Microsoft.UI.Xaml.Style(typeof(Microsoft.UI.Xaml.Controls.TextBox));
@@ -127,6 +131,7 @@ public static class MauiProgram
                 noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.FocusVisualSecondaryBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
                 noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.UseSystemFocusVisualsProperty, false));
                 noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BackgroundProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+
                 textBox.Style = noBorderStyle;
             }
 #endif
@@ -141,8 +146,6 @@ public static class MauiProgram
             {
                 textField.Layer.BorderWidth = 0;
                 textField.Layer.ShadowOpacity = 0;
-                textField.BackgroundColor = UIKit.UIColor.Clear;
-                textField.Layer.BackgroundColor = UIKit.UIColor.Clear.CGColor;
             }
 #endif
         });
@@ -158,6 +161,7 @@ public static class MauiProgram
 
                 textBox.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
                 textBox.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+
                 textBox.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
 
                 var noBorderStyle = new Microsoft.UI.Xaml.Style(typeof(Microsoft.UI.Xaml.Controls.TextBox));
@@ -167,6 +171,7 @@ public static class MauiProgram
                 noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.FocusVisualSecondaryBrushProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
                 noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.UseSystemFocusVisualsProperty, false));
                 noBorderStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.Control.BackgroundProperty, new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent)));
+
                 textBox.Style = noBorderStyle;
             }
 #endif
@@ -176,14 +181,25 @@ public static class MauiProgram
                 editText.Background = null;
             }
 #endif
+#if IOS || MACCATALYST
+            if (handler.PlatformView is UIKit.UITextView textView)
+            {
+                textView.Layer.BorderWidth = 0;
+                textView.Layer.ShadowOpacity = 0;
+            }
+#endif
         });
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
 
+        // Register AppointmentNotificationService as singleton
         builder.Services.AddSingleton<AppointmentNotificationService>();
+
+        // Register App for constructor injection of AppointmentNotificationService
         builder.Services.AddSingleton<App>();
+
         builder.Services.AddSingleton<AppointmentNotificationService>();
         builder.Services.AddTransient<CalendarPage>();
         return builder.Build();
@@ -202,6 +218,7 @@ public static class MauiProgram
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
         public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
 
+        // Keep delegate reference to avoid GC
         public static WndProcDelegate NewWndProcDelegate;
     }
 }

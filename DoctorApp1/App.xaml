@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:DoctorApp1"
              xmlns:converters="clr-namespace:DoctorApp1.Converters"
-             x:Class="DoctorApp1.App"
-             UserAppTheme="Light">
+             x:Class="DoctorApp1.App">
     <Application.Resources>
         <ResourceDictionary>
 

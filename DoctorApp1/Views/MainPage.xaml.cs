@@ -5,6 +5,7 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +15,9 @@ namespace DoctorApp1
     {
         private bool _hasShownTodayAppointmentsPopup = false;
         public List<Patient> Patients { get; set; } = new List<Patient>();
-        public List<Appointment> MissedAppointments { get; set; } = new List<Appointment>();
+
+        // Changed from List<Appointment> to ObservableCollection<string> to hold display strings
+        public ObservableCollection<string> MissedAppointments { get; set; } = new ObservableCollection<string>();
 
         private string _loggedInEmail = string.Empty;
         private DoctorUser _currentUser;
@@ -71,36 +74,21 @@ namespace DoctorApp1
 
         private void ShowNoAppointmentsPopup()
         {
-            MissedAppointmentsStack.Children.Clear();
-
-            MissedAppointmentsStack.Children.Add(new Label
-            {
-                Text = "You have no upcoming appointments today.",
-                FontSize = 16,
-                Margin = new Thickness(0, 10),
-                TextColor = Colors.Black
-            });
-
+            MissedAppointments.Clear();
+            MissedAppointments.Add("You have no upcoming appointments today.");
             MissedNotificationsPopup.IsVisible = true;
         }
 
         private void ShowTodaysAppointmentsPopup(List<Appointment> appointments)
         {
-            MissedAppointments = appointments;
-            MissedAppointmentsStack.Children.Clear();
+            MissedAppointments.Clear();
 
             foreach (var appt in appointments)
             {
                 var patient = App.Database.GetPatients().FirstOrDefault(p => p.PatientID == appt.PatientID);
                 string fullName = patient?.FullName ?? "Unknown";
 
-                MissedAppointmentsStack.Children.Add(new Label
-                {
-                    Text = $"Appointment with {fullName} at {appt.StartTime:HH:mm}",
-                    FontSize = 16,
-                    Margin = new Thickness(0, 5),
-                    TextColor = Colors.Black
-                });
+                MissedAppointments.Add($"Appointment with {fullName} at {appt.StartTime:HH:mm}");
             }
 
             MissedNotificationsPopup.IsVisible = true;
@@ -121,24 +109,14 @@ namespace DoctorApp1
 
         private void ShowMissedNotificationsPopup(List<Appointment> missedAppointments)
         {
-            // 🔧 Save to global field so it can be cleared later
-            MissedAppointments = missedAppointments;
-
-            MissedAppointmentsStack.Children.Clear();
+            MissedAppointments.Clear();
 
             foreach (var appt in missedAppointments)
             {
                 var patient = App.Database.GetPatients().FirstOrDefault(p => p.PatientID == appt.PatientID);
                 string fullName = patient?.FullName ?? "Unknown";
 
-                var label = new Label
-                {
-                    Text = $"Appointment with {fullName} at {appt.StartTime:HH:mm, MMM dd}",
-                    FontSize = 16,
-                    Margin = new Thickness(0, 5)
-                };
-
-                MissedAppointmentsStack.Children.Add(label);
+                MissedAppointments.Add($"Appointment with {fullName} at {appt.StartTime:HH:mm, MMM dd}");
             }
 
             MissedNotificationsPopup.IsVisible = true;
@@ -146,15 +124,14 @@ namespace DoctorApp1
 
         private void OnCloseMissedPopupClicked(object sender, EventArgs e)
         {
-            foreach (var appt in MissedAppointments)
+            foreach (var displayText in MissedAppointments)
             {
-                notificationService.ClearMissedNotification(appt.AppointmentID);
+
             }
 
             MissedAppointments.Clear();
             MissedNotificationsPopup.IsVisible = false;
         }
-
 
         private void LoadPatients()
         {
@@ -242,8 +219,6 @@ namespace DoctorApp1
         {
             if (MissedAppointments.Count > 0)
             {
-                var appointment = MissedAppointments[0];
-                notificationService.ClearMissedNotification(appointment.AppointmentID);
                 MissedAppointments.RemoveAt(0);
                 OnPropertyChanged(nameof(MissedAppointments));
             }

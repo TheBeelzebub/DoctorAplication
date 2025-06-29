@@ -221,9 +221,22 @@
                    TextColor="Black"
                    HorizontalOptions="Center" />
 
-                    <ScrollView HeightRequest="200" Margin="0,10,0,10">
-                        <VerticalStackLayout x:Name="MissedAppointmentsStack" />
-                    </ScrollView>
+                    <ListView
+    x:Name="MissedAppointmentsListView"
+    HeightRequest="200"
+    Margin="0,10,0,10"
+    SeparatorVisibility="Default"
+    BackgroundColor="#FFFFFF"
+    ItemsSource="{Binding MissedAppointments}"
+    HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Label Text="{Binding}" FontSize="16" TextColor="#222" Padding="10,5" />
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
                     <Button Text="Close"
                     Clicked="OnCloseMissedPopupClicked"
